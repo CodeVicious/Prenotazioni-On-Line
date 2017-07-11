@@ -1,2 +1,8 @@
 template: Hello, %s!
 defaultName: Stranger
+
+database:
+  driverClass: com.mysql.jdbc.Driver
+  user: prenotazioniDbUser
+  password: XJzmxy4FpptEBRKs
+  url: jdbc:mysql://localhost:8888/phonebook
