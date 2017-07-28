@@ -1,10 +1,14 @@
 package com.codevicious.prenotazionionline;
 
+import javax.ws.rs.client.Client;
+
+import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.skife.jdbi.v2.DBI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.codevicious.prenotazionionline.resources.AvailabilityResource;
+import com.codevicious.prenotazionionline.resources.Dashboard;
 
 import io.dropwizard.Application;
 import io.dropwizard.jdbi.DBIFactory;
@@ -48,6 +52,10 @@ public class PrenotazioniOnLineApplication extends Application<PrenotazioniOnLin
 		final DBIFactory factory = new DBIFactory();
 		final DBI jdbi = factory
 		.build(environment, configuration.getDataSourceFactory(), "mysql");
+		final Client client = new 
+				JerseyClientBuilder().build();
+		environment.jersey().register(new Dashboard(client));
+		
 		environment.healthChecks().register("template", healthCheck);		
 		environment.jersey().register(new AvailabilityResource(jdbi));
 		
