@@ -2,6 +2,7 @@ package com.codevicious.prenotazionionline.resources;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
@@ -29,7 +30,30 @@ public class AvailabilityResource {
 	public AvailabilityResource(DBI jdbi) {
 		availabilityDAO = jdbi.onDemand(AvailabilityDAO.class); 
 	}
+	
+	
+	@GET
+	@Path("/places")
+	public Response getAllPlaces() {
+		// retrieve information about all the availabilities
+		// ...
+		
+		List<String> places = availabilityDAO.getPlaces();		
+		return Response.ok(places).build();
+	}
 
+	
+
+	@GET
+	@Path("/all")
+	public Response getAllAvailability() {
+		// retrieve information about all the availabilities
+		// ...
+		
+		List<Availability> availabiliy = availabilityDAO.getAvailability();		
+		return Response.ok(availabiliy).build();
+	}
+	
 	@GET
 	@Path("/{id}")
 	public Response getAvailability(@PathParam("id") int id) {
@@ -45,7 +69,7 @@ public class AvailabilityResource {
 		// store the new availability
 		// ...
 		
-		int newAvailabilityID = availabilityDAO.createAvailability(availability.getData(), availability.getOra(),availability.getFK_places());
+		int newAvailabilityID = availabilityDAO.createAvailability(availability.getData(), availability.getOra(),availability.getfKplaces());
 		
 		return Response.created(new URI(String.valueOf(newAvailabilityID))).build();
 	}
@@ -64,11 +88,11 @@ public class AvailabilityResource {
 	public Response updateContact(@PathParam("id") int id, Availability availability) {
 		// update the contact with the provided ID
 		// ...
-		availabilityDAO.updateAvailability(id, availability.getData(), availability.getOra(), availability.getFK_places());
+		availabilityDAO.updateAvailability(id, availability.getData(), availability.getOra(), availability.getfKplaces());
 		return Response.ok(new Availability(id,
 				availability.getData(),
 				availability.getOra(),
-				availability.getFK_places() )).build();
+				availability.getfKplaces() )).build();
 		
 	}
 

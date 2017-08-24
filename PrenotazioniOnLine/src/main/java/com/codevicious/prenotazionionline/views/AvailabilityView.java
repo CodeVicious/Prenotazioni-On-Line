@@ -1,6 +1,6 @@
 package com.codevicious.prenotazionionline.views;
 
-import org.eclipse.jetty.server.handler.ContextHandler.Availability;
+import com.codevicious.prenotazionionline.representations.Availability;
 
 import io.dropwizard.views.View;
 

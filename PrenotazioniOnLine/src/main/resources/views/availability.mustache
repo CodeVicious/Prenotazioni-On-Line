@@ -1,40 +1,43 @@
-<html>
-
+<!DOCTYPE html>
+<html lang="it">
 <head>
-
-<title>Contact</title>
-
+<title>Sistema di Prenotazione Carta di Identità Digitale -
+	Comune di San Miniato</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 
 <body>
+	<div class="container">
+		<h1>Sistema di Prenotazione appuntamenti per la Carta di Identità
+			Digitale - San Miniato</h1>
+		<p>This is some text.</p>
 
-	<table border="1">
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Disponibilità</th>
+					<th>Data</th>
+					<th>Ora</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
 
-		<tr>
+					<td>({{availability.id}})</td>
+					<td>{{availability.Data}}</td>
+					<td>{{availability.Ora}}</td>
 
-			<th colspan="2">Disponibilit� ({{availability.id}})</th>
-
-		</tr>
-
-		<tr>
-
-			<td>Data</td>
-
-			<td>{{availability.Data}}</td>
-
-		</tr>
-
-		<tr>
-
-			<td>Ora</td>
-
-			<td>{{availability.Ora}}</td>
-
-		</tr>
-
-
-	</table>
-
+				</tr>
+			</tbody>
+		</table>
+	</div>
 </body>
 
 </html>

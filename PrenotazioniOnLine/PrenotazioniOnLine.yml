@@ -1,8 +1,6 @@
-template: Hello, %s!
-defaultName: Stranger
 
 database:
-  driverClass: com.mysql.jdbc.Driver
+  driverClass: com.mysql.cj.jdbc.Driver
   user: prenotazioniDbUser
-  password: XJzmxy4FpptEBRKs
-  url: jdbc:mysql://localhost:8888/phonebook
+  password: root
+  url: jdbc:mysql://localhost:3306/prenotazionicid?useLegacyDatetimeCode=false&serverTimezone=UTC
