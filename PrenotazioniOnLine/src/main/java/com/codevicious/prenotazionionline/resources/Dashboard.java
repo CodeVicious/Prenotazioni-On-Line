@@ -1,6 +1,7 @@
 package com.codevicious.prenotazionionline.resources;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -13,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.codevicious.prenotazionionline.representations.Availability;
+import com.codevicious.prenotazionionline.representations.Places;
 import com.codevicious.prenotazionionline.views.AvailabilityView;
 import com.codevicious.prenotazionionline.views.DashboardView;
 
@@ -32,7 +34,9 @@ public class Dashboard {
 	Invocation.Builder invocationBuilder = availResource.request(MediaType.APPLICATION_JSON_TYPE);
 	
 	Response response = invocationBuilder.get();			
-	List<String> places = response.readEntity(List.class);
+	
+	@SuppressWarnings("unchecked")
+	List<Places> places = response.readEntity(List.class);
 	
 	return new DashboardView(places);
 	}

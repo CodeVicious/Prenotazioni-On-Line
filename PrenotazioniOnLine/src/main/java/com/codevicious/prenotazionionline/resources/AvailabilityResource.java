@@ -3,6 +3,7 @@ package com.codevicious.prenotazionionline.resources;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
@@ -16,9 +17,12 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.skife.jdbi.v2.DBI;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.codevicious.prenotazionionline.dao.AvailabilityDAO;
 import com.codevicious.prenotazionionline.representations.Availability;
+import com.codevicious.prenotazionionline.representations.Places;
 
 @Path("/disponibilita")
 @Produces(MediaType.APPLICATION_JSON)
@@ -26,6 +30,7 @@ import com.codevicious.prenotazionionline.representations.Availability;
 public class AvailabilityResource {
 
 	private final AvailabilityDAO availabilityDAO;
+	private static final Logger LOGGER = LoggerFactory.getLogger(AvailabilityResource.class);
 
 	public AvailabilityResource(DBI jdbi) {
 		availabilityDAO = jdbi.onDemand(AvailabilityDAO.class); 
@@ -38,7 +43,8 @@ public class AvailabilityResource {
 		// retrieve information about all the availabilities
 		// ...
 		
-		List<String> places = availabilityDAO.getPlaces();		
+		List<Places> places = availabilityDAO.getPlaces();		
+		LOGGER.info("Logger Places "+places.toString());
 		return Response.ok(places).build();
 	}
 
@@ -50,7 +56,7 @@ public class AvailabilityResource {
 		// retrieve information about all the availabilities
 		// ...
 		
-		List<Availability> availabiliy = availabilityDAO.getAvailability();		
+		List<Availability> availabiliy = availabilityDAO.getAllAvailability();		
 		return Response.ok(availabiliy).build();
 	}
 	
