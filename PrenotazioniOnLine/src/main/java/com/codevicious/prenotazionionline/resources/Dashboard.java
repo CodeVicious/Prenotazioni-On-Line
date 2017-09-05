@@ -14,7 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.codevicious.prenotazionionline.representations.Availability;
-import com.codevicious.prenotazionionline.representations.Places;
+import com.codevicious.prenotazionionline.representations.Place;
 import com.codevicious.prenotazionionline.views.AvailabilityView;
 import com.codevicious.prenotazionionline.views.DashboardView;
 
@@ -36,7 +36,7 @@ public class Dashboard {
 	Response response = invocationBuilder.get();			
 	
 	@SuppressWarnings("unchecked")
-	List<Places> places = response.readEntity(List.class);
+	List<Place> places = response.readEntity(List.class);
 	
 	return new DashboardView(places);
 	}

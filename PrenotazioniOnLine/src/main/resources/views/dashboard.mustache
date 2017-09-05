@@ -16,88 +16,72 @@
 <script src='/assets/calendar/lib/moment.min.js'></script>
 <script src='/assets/calendar/fullcalendar.js'></script>
 <script>
+	$(document)
+			.ready(
+					function() {
 
-	$(document).ready(function() {
+						$("#SelezioneUfficio")
+								.on(
+										'change',
+										function() {
+											var selected = []
+											selected = $('#SelezioneUfficio')
+													.val()
+											var moment = $('#calendar')
+													.fullCalendar('getDate');
+											alert("The current date of the calendar is "
+													+ moment.format());
+											alert(selected);
+											$('#calendar').fullCalendar(
+													'removeEventSources');
+											$('#calendar')
+													.fullCalendar(
+															{
+																events : 'http://localhost:8080/disponibilita?year=2017&month=05&place=1'
+															});
 
-		$('#calendar').fullCalendar({
-			header : {
-				left : 'prev,next today',
-				center : 'title',
-				right : 'month,agendaWeek,agendaDay'
-			},
-			defaultDate : '2015-02-12',
-			editable : true,
-			eventLimit : true, // allow "more" link when too many events
-			events : [ {
-				title : 'Business Lunch',
-				start : '2015-02-03T13:00:00',
-				constraint : 'businessHours'
-			}, {
-				title : 'Meeting',
-				start : '2015-02-13T11:00:00',
-				constraint : 'availableForMeeting', // defined below
-				color : '#257e4a'
-			}, {
-				title : 'Conference',
-				start : '2015-02-18',
-				end : '2015-02-20'
-			}, {
-				title : 'Party',
-				start : '2015-02-29T20:00:00'
-			},
+											$('#calendar').fullCalendar(
+													'refetchEvents');
+										});
 
-			// areas where "Meeting" must be dropped
-			{
-				id : 'availableForMeeting',
-				start : '2015-02-11T10:00:00',
-				end : '2015-02-11T16:00:00',
-				rendering : 'background'
-			}, {
-				id : 'availableForMeeting',
-				start : '2015-02-13T10:00:00',
-				end : '2015-02-13T16:00:00',
-				rendering : 'background'
-			},
+						$('#calendar').fullCalendar(
+								{
+									header : {
+										left : 'prev,next today',
+										center : 'title',
+										right : 'month,agendaWeek,agendaDay'
+									},									
+									editable : true,
+									eventLimit : true, // allow "more" link when too many events
+									events : [],
+									eventClick : function(calEvent, jsEvent,
+											view) {
 
-			// red areas where no events can be dropped
-			{
-				start : '2015-02-24',
-				end : '2015-02-28',
-				overlap : false,
-				rendering : 'background',
-				color : '#ff9f89'
-			}, {
-				start : '2015-02-06',
-				end : '2015-02-08',
-				overlap : false,
-				rendering : 'background',
-				color : '#ff9f89'
-			} ],
-			eventClick : function(calEvent, jsEvent, view) {
+										alert('Event: ' + calEvent.title);
+										alert('Coordinates: ' + jsEvent.pageX
+												+ ',' + jsEvent.pageY);
+										alert('View: ' + view.name);
 
-				alert('Event: ' + calEvent.title);
-				alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
-				alert('View: ' + view.name);
+										// change the border color just for fun
+										$(this).css('border-color', 'red');
 
-				// change the border color just for fun
-				$(this).css('border-color', 'red');
+									},
+									dayClick : function(date, jsEvent, view) {
 
-			},
-			 dayClick: function(date, jsEvent, view) {
+										alert('Clicked on: ' + date.format());
 
-			        alert('Clicked on: ' + date.format());
+										alert('Coordinates: ' + jsEvent.pageX
+												+ ',' + jsEvent.pageY);
 
-			        alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
+										alert('Current view: ' + view.name);
 
-			        alert('Current view: ' + view.name);
+										// change the day's background color just for fun
+										$(this).css('background-color', 'red');
 
-			        // change the day's background color just for fun
-			        $(this).css('background-color', 'red');
+									}
+								});
 
-			    }
-		});
-
-	});
+					});
 </script>
 <style>
 body {
@@ -144,14 +128,25 @@ body {
 			Digitale</h1>
 		<h2>San Miniato</h2>
 
-		<p>Effettuare la selezione della prenotazione</p>
 
-		<select class="form-control"> 
-		{{#places}}
-			<option value={{ID}} >{{place}}</option> 
-		{{/places}}
+		<form class="form-horizontal" action="javascript:void(0);">
 
-		</select>
+			<div class="form-group">
+				<label class="control-label col-sm-3" for="email">Selezionare
+					l'Ufficio desiderato</label>
+				<div class="col-sm-9">
+
+					<select id="SelezioneUfficio" class="form-control"> {{#places}}
+						<option value={{ID}}>{{place}}</option> {{/places}}
+
+					</select>
+				</div>
+			</div>
+
+			<div id='calendar'></div>
+
+		</form>
+		
 	</div>
 	<div id='loading'>loading...</div>
 	<div id='calendar'></div>
