@@ -15,7 +15,7 @@ public class PlacesMapper implements ResultSetMapper<Places> {
 
 	public Places map(int index, ResultSet r, StatementContext ctx) throws SQLException {
 		
-		return new Places(r.getString("ID"), r.getString("place"));
+		return new Places(r.getString("ID"), r.getString("name"),r.getString("address"),r.getFloat("lat"),r.getFloat("lon"),r.getString("color") );
 	
 
 	}

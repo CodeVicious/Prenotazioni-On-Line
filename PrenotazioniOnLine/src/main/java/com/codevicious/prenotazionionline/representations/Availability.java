@@ -1,38 +1,55 @@
 package com.codevicious.prenotazionionline.representations;
 
-import java.sql.Date;
 import java.sql.Time;
+
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Availability {
 	
-	private final int id;
-	private final Date data;	
-	private final Time ora;
-	private final int fKplaces;
+	private int id;
+	private DateTime data;	
+	private Time ora;
+	private int fKplaces;
+	private String name;
+	private String color;
 
 	public Availability() {
 		this.id = 0;		
 		this.data = null;
 		this.ora = null;
 		this.fKplaces = 0;
+		this.name = null;
+		this.color = null;
 	}
 
-	public Availability(int id, Date data, Time ora, int fKplaces) {
+	public Availability(int id, DateTime data, Time ora, int fKplaces, String name, String color) {
 		this.id = id;		
 		this.data = data;
 		this.ora = ora;
 		this.fKplaces = fKplaces;
+		this.name = name;
+		this.color = color;
 	}
 
-	@JsonProperty("Id")
+	@JsonProperty("id")
 	public int getId() {
 		return id;
 	}
+
 	
-	@JsonProperty("Data")
-	public Date getData() {
+	@JsonProperty("start")
+	public String getStart() {
+		DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss");
+		return fmt.print(data);
+	}
+
+	
+	@JsonProperty("data")
+	public DateTime getData() {
 		return data;
 	}
 
@@ -44,6 +61,22 @@ public class Availability {
 	@JsonProperty("FKplaces")
 	public int getfKplaces() {
 		return fKplaces;
+	}
+	
+	@JsonProperty("end")
+	public String getEnd() {
+		DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss");		
+		return fmt.print(data.plusMinutes(30));
+	}
+
+	@JsonProperty("title")
+	public String getName() {
+		return name;
+	}
+
+	@JsonProperty("textColor")
+	public String getColor() {
+		return color;
 	}
 
 }

@@ -16,8 +16,24 @@
 <script src='/assets/calendar/lib/moment.min.js'></script>
 <script src='/assets/calendar/fullcalendar.js'></script>
 <script>
-
 	$(document).ready(function() {
+		$("#SelezioneUfficio").on('change', function() {
+			var selected = []
+			selected = $('#SelezioneUfficio').val()
+			var moment = $('#calendar').fullCalendar('getDate');
+			$('#calendar').fullCalendar('removeEventSources');
+			$('#calendar').fullCalendar('removeEvents');
+			$('#calendar').fullCalendar('addEventSource', {
+				url : '/disponibilita?place=' + selected,
+				type : 'GET', // Send post data
+				error : function() {
+					alert('There was an error while fetching events.');
+				}
+			});
+
+			$('#calendar').fullCalendar('rerenderEvents');
+			
+		});
 
 		$('#calendar').fullCalendar({
 			header : {
@@ -25,76 +41,41 @@
 				center : 'title',
 				right : 'month,agendaWeek,agendaDay'
 			},
-			defaultDate : '2015-02-12',
 			editable : true,
 			eventLimit : true, // allow "more" link when too many events
-			events : [ {
-				title : 'Business Lunch',
-				start : '2015-02-03T13:00:00',
-				constraint : 'businessHours'
-			}, {
-				title : 'Meeting',
-				start : '2015-02-13T11:00:00',
-				constraint : 'availableForMeeting', // defined below
-				color : '#257e4a'
-			}, {
-				title : 'Conference',
-				start : '2015-02-18',
-				end : '2015-02-20'
-			}, {
-				title : 'Party',
-				start : '2015-02-29T20:00:00'
-			},
-
-			// areas where "Meeting" must be dropped
-			{
-				id : 'availableForMeeting',
-				start : '2015-02-11T10:00:00',
-				end : '2015-02-11T16:00:00',
-				rendering : 'background'
-			}, {
-				id : 'availableForMeeting',
-				start : '2015-02-13T10:00:00',
-				end : '2015-02-13T16:00:00',
-				rendering : 'background'
-			},
-
-			// red areas where no events can be dropped
-			{
-				start : '2015-02-24',
-				end : '2015-02-28',
-				overlap : false,
-				rendering : 'background',
-				color : '#ff9f89'
-			}, {
-				start : '2015-02-06',
-				end : '2015-02-08',
-				overlap : false,
-				rendering : 'background',
-				color : '#ff9f89'
-			} ],
+			events : [],
 			eventClick : function(calEvent, jsEvent, view) {
 
-				alert('Event: ' + calEvent.title);
-				alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
-				alert('View: ' + view.name);
-
-				// change the border color just for fun
 				$(this).css('border-color', 'red');
 
+				$.ajax({
+					type : "DELETE",
+					dataType : "json",
+					url : "/disponibilita/" + calEvent.id,
+					success : function(data) {
+						$('#calendar').fullCalendar( 'refetchEvents' );
+						alert(data);						
+						$("#myModal").modal('show');
+					},
+					error : function(xhr, ajaxOptions, thrownError) {
+						alert(xhr.status);
+						alert(thrownError);
+					}
+				});
+
 			},
-			 dayClick: function(date, jsEvent, view) {
+			dayClick : function(date, jsEvent, view) {
 
-			        alert('Clicked on: ' + date.format());
+				alert('Clicked on: ' + date.format());
 
-			        alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
+				alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
 
-			        alert('Current view: ' + view.name);
+				alert('Current view: ' + view.name);
 
-			        // change the day's background color just for fun
-			        $(this).css('background-color', 'red');
+				// change the day's background color just for fun
+				$(this).css('background-color', 'red');
 
-			    }
+			}
 		});
 
 	});
@@ -139,6 +120,31 @@ body {
 		<code>Connessione Server Assente</code>
 	</div>
 
+	<!-- Modal HTML -->
+	<div id="myModal" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">&times;</button>
+					<h4 class="modal-title">Confirmation</h4>
+				</div>
+				<div class="modal-body">
+					<p>Do you want to save changes you made to document before
+						closing?</p>
+					<p class="text-warning">
+						<small>If you don't save, your changes will be lost.</small>
+					</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary">Save changes</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
 	<div class="container">
 		<h1>Sistema di Prenotazione appuntamenti per la Carta di Identità
 			Digitale</h1>
@@ -146,10 +152,9 @@ body {
 
 		<p>Effettuare la selezione della prenotazione</p>
 
-		<select class="form-control"> 
-		{{#places}}
-			<option value={{ID}} >{{place}}</option> 
-		{{/places}}
+		<select id="SelezioneUfficio" class="form-control">
+			{{#places}}
+			<option value={{id}}>{{place}}</option> {{/places}}
 
 		</select>
 	</div>
