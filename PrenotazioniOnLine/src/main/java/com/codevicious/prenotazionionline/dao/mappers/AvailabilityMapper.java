@@ -17,7 +17,7 @@ public class AvailabilityMapper implements ResultSetMapper<Availability>{
 		
 		DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
 				
-		return new Availability(r.getInt("ID"), fmt.parseDateTime(r.getString("Data")), r.getTime("Ora"), r.getInt("FKplaces"),r.getString("name"),r.getString("color"));
+		return new Availability(r.getInt("ID"), fmt.parseDateTime(r.getString("Data")), r.getInt("FKplaces"), r.getBoolean("reserved"), r.getString("name"),r.getString("color"));
 	}
 
 }

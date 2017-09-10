@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.5.1
--- http://www.phpmyadmin.net
+-- version 4.7.2
+-- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Sep 08, 2017 at 01:52 PM
--- Server version: 10.1.13-MariaDB
--- PHP Version: 5.6.23
+-- Host: localhost:3306
+-- Creato il: Set 10, 2017 alle 21:05
+-- Versione del server: 5.6.35
+-- Versione PHP: 7.1.6
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -23,31 +23,31 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `availability`
+-- Struttura della tabella `availability`
 --
 
 CREATE TABLE `availability` (
   `ID` int(11) NOT NULL,
   `Data` datetime NOT NULL,
-  `Ora` time NOT NULL,
-  `FKplaces` int(11) NOT NULL
+  `FKplaces` int(11) NOT NULL,
+  `reserved` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf16;
 
 --
--- Dumping data for table `availability`
+-- Dump dei dati per la tabella `availability`
 --
 
-INSERT INTO `availability` (`ID`, `Data`, `Ora`, `FKplaces`) VALUES
-(2, '2017-05-09 13:00:00', '06:00:00', 1),
-(3, '2017-08-16 11:00:00', '07:00:00', 1),
-(4, '2017-08-16 11:00:00', '08:00:00', 2),
-(5, '2017-05-09 14:00:00', '06:00:00', 1),
-(6, '2017-05-09 15:00:00', '06:00:00', 1);
+INSERT INTO `availability` (`ID`, `Data`, `FKplaces`, `reserved`) VALUES
+(2, '2017-05-09 13:00:00', 1, 0),
+(3, '2017-08-16 11:00:00', 1, 1),
+(4, '2017-08-16 11:00:00', 2, 0),
+(5, '2017-05-09 14:00:00', 1, 0),
+(6, '2017-05-09 15:00:00', 1, 0);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `clients`
+-- Struttura della tabella `clients`
 --
 
 CREATE TABLE `clients` (
@@ -62,7 +62,7 @@ CREATE TABLE `clients` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `places`
+-- Struttura della tabella `places`
 --
 
 CREATE TABLE `places` (
@@ -76,7 +76,7 @@ CREATE TABLE `places` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf16;
 
 --
--- Dumping data for table `places`
+-- Dump dei dati per la tabella `places`
 --
 
 INSERT INTO `places` (`ID`, `name`, `address`, `lat`, `lon`, `type`, `color`) VALUES
@@ -87,7 +87,7 @@ INSERT INTO `places` (`ID`, `name`, `address`, `lat`, `lon`, `type`, `color`) VA
 -- --------------------------------------------------------
 
 --
--- Table structure for table `reservations`
+-- Struttura della tabella `reservations`
 --
 
 CREATE TABLE `reservations` (
@@ -100,7 +100,7 @@ CREATE TABLE `reservations` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Struttura della tabella `users`
 --
 
 CREATE TABLE `users` (
@@ -113,72 +113,72 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf16;
 
 --
--- Dumping data for table `users`
+-- Dump dei dati per la tabella `users`
 --
 
 INSERT INTO `users` (`name`, `surname`, `username`, `email`, `ID`, `PW`) VALUES
 ('Gianni', 'Codevico', 'webmaster', 'gcodevico@comune.san-miniato.pi.it', 1, '50a9c7dbf0fa09e8969978317dca12e8');
 
 --
--- Indexes for dumped tables
+-- Indici per le tabelle scaricate
 --
 
 --
--- Indexes for table `availability`
+-- Indici per le tabelle `availability`
 --
 ALTER TABLE `availability`
   ADD PRIMARY KEY (`ID`);
 
 --
--- Indexes for table `clients`
+-- Indici per le tabelle `clients`
 --
 ALTER TABLE `clients`
   ADD PRIMARY KEY (`ID`);
 
 --
--- Indexes for table `places`
+-- Indici per le tabelle `places`
 --
 ALTER TABLE `places`
   ADD PRIMARY KEY (`ID`) USING BTREE;
 
 --
--- Indexes for table `reservations`
+-- Indici per le tabelle `reservations`
 --
 ALTER TABLE `reservations`
   ADD PRIMARY KEY (`ID`);
 
 --
--- Indexes for table `users`
+-- Indici per le tabelle `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`ID`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT per le tabelle scaricate
 --
 
 --
--- AUTO_INCREMENT for table `availability`
+-- AUTO_INCREMENT per la tabella `availability`
 --
 ALTER TABLE `availability`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
--- AUTO_INCREMENT for table `clients`
+-- AUTO_INCREMENT per la tabella `clients`
 --
 ALTER TABLE `clients`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `places`
+-- AUTO_INCREMENT per la tabella `places`
 --
 ALTER TABLE `places`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
--- AUTO_INCREMENT for table `reservations`
+-- AUTO_INCREMENT per la tabella `reservations`
 --
 ALTER TABLE `reservations`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `users`
+-- AUTO_INCREMENT per la tabella `users`
 --
 ALTER TABLE `users`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;

@@ -40,14 +40,19 @@ public interface AvailabilityDAO {
 			@Bind("id") String id);
 
 	@GetGeneratedKeys
-	@SqlUpdate("INSERT INTO availability (ID, Data, Ora, FK_places) VALUES (NULL,:Data,:Ora,:FKplaces)")
-	int createAvailability(@Bind("Data") DateTime Data, @Bind("Ora") Time Ora, @Bind("FK_places") int FK_places);
+	@SqlUpdate("INSERT INTO availability (ID, Data, FK_places) VALUES (NULL,:Data, :FKplaces)")
+	int createAvailability(@Bind("Data") DateTime Data,  @Bind("FK_places") int FK_places);
 
-	@SqlUpdate("UPDATE availability SET Data=:Data, Ora=:Ora,FKplaces=:FKplaces WHERE ID = :id")
-	void updateAvailability(@Bind("id") int id, @Bind("Data") DateTime Data, @Bind("Ora") Time Ora,
+	@SqlUpdate("UPDATE availability SET Data=:Data, FKplaces=:FKplaces WHERE ID = :id")
+	void updateAvailability(@Bind("id") int id, @Bind("Data") DateTime Data,
 			@Bind("FKplaces") int FKplaces);
+	
+	@SqlUpdate("UPDATE availability SET reserved = NOT reserved  WHERE ID = :id")
+	void updateAvailabilityStatus(@Bind("id") int id);
 
 	@SqlUpdate("DELETE FROM availability WHERE ID = :id")
 	void deleteContact(@Bind("id") int id);
+
+	
 
 }

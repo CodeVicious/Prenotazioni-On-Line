@@ -14,25 +14,26 @@ public class Availability {
 	private DateTime data;	
 	private Time ora;
 	private int fKplaces;
+	private Boolean reserved;
 	private String name;
 	private String color;
 
 	public Availability() {
 		this.id = 0;		
 		this.data = null;
-		this.ora = null;
 		this.fKplaces = 0;
 		this.name = null;
 		this.color = null;
+		this.reserved = false;
 	}
 
-	public Availability(int id, DateTime data, Time ora, int fKplaces, String name, String color) {
+	public Availability(int id, DateTime data, int fKplaces, Boolean reserved, String name, String color) {
 		this.id = id;		
 		this.data = data;
-		this.ora = ora;
 		this.fKplaces = fKplaces;
 		this.name = name;
 		this.color = color;
+		this.reserved = reserved;
 	}
 
 	@JsonProperty("id")
@@ -53,10 +54,6 @@ public class Availability {
 		return data;
 	}
 
-	@JsonProperty("Ora")
-	public Time getOra() {
-		return ora;
-	}
 
 	@JsonProperty("FKplaces")
 	public int getfKplaces() {
@@ -77,6 +74,39 @@ public class Availability {
 	@JsonProperty("textColor")
 	public String getColor() {
 		return color;
+	}
+
+	@JsonProperty("reserved")
+	public Boolean getReserved() {
+		return reserved;
+	}
+
+	@JsonProperty("id")
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	@JsonProperty("start")
+	public void setData(DateTime data) {
+		this.data = data;
+	}
+
+	@JsonProperty("FKplaces")
+	public void setfKplaces(int fKplaces) {
+		this.fKplaces = fKplaces;
+	}
+
+	@JsonProperty("reserved")
+	public void setReserved(Boolean reserved) {
+		this.reserved = reserved;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
 	}
 
 }

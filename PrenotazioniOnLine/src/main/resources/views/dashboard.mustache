@@ -13,6 +13,7 @@
 <script src="/assets/calendar/lib/jquery.min.js"></script>
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
 <script src='/assets/calendar/lib/moment.min.js'></script>
 <script src='/assets/calendar/fullcalendar.js'></script>
 <script>
@@ -32,7 +33,7 @@
 			});
 
 			$('#calendar').fullCalendar('rerenderEvents');
-			
+
 		});
 
 		$('#calendar').fullCalendar({
@@ -49,13 +50,13 @@
 				$(this).css('border-color', 'red');
 
 				$.ajax({
-					type : "DELETE",
+					type : "PUT",
 					dataType : "json",
-					url : "/disponibilita/" + calEvent.id,
+					url : "/disponibilita/reserve/" + calEvent.id,
 					success : function(data) {
-						$('#calendar').fullCalendar( 'refetchEvents' );
-						alert(data);						
-						$("#myModal").modal('show');
+						$('#calendar').fullCalendar('refetchEvents');
+
+						$("#prenotazioneModale").modal('show');
 					},
 					error : function(xhr, ajaxOptions, thrownError) {
 						alert(xhr.status);
@@ -121,20 +122,39 @@ body {
 	</div>
 
 	<!-- Modal HTML -->
-	<div id="myModal" class="modal fade">
+	<div id="prenotazioneModale" class="modal fade">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"
 						aria-hidden="true">&times;</button>
-					<h4 class="modal-title">Confirmation</h4>
+					<h4 class="modal-title">Scheda di prenotazione</h4>
 				</div>
 				<div class="modal-body">
-					<p>Do you want to save changes you made to document before
-						closing?</p>
-					<p class="text-warning">
-						<small>If you don't save, your changes will be lost.</small>
-					</p>
+				
+					<form id="schedaprenotazione" method="post" class="form-horizontal">
+						<div class="form-group">
+							<label class="col-xs-3 control-label">Nome</label>
+							<div class="col-xs-5">
+								<input type="text" class="form-control" name="nome" required />
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-xs-3 control-label">Cognome</label>
+							<div class="col-xs-5">
+								<input type="text" class="form-control" name="cognome" required />
+							</div>
+						</div>
+
+						<div class="form-group">
+							<div class="col-xs-5 col-xs-offset-3">
+								<button type="submit" class="btn btn-primary">Prenota</button>
+								<button type="button" class="btn btn-default"
+									data-dismiss="modal">Annulla</button>
+							</div>
+						</div>
+					</form>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

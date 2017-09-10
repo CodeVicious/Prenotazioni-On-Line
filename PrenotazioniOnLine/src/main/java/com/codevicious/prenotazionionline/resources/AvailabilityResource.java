@@ -80,7 +80,7 @@ public class AvailabilityResource {
 		// store the new availability
 		// ...
 
-		int newAvailabilityID = availabilityDAO.createAvailability(availability.getData(), availability.getOra(),
+		int newAvailabilityID = availabilityDAO.createAvailability(availability.getData(), 
 				availability.getfKplaces());
 
 		return Response.created(new URI(String.valueOf(newAvailabilityID))).build();
@@ -97,14 +97,24 @@ public class AvailabilityResource {
 
 	@PUT
 	@Path("/{id}")
-	public Response updateContact(@PathParam("id") int id, Availability availability) {
+	public Response updateAvailability(@PathParam("id") int id, Availability availability) {
 		// update the contact with the provided ID
 		// ...
-		availabilityDAO.updateAvailability(id, availability.getData(), availability.getOra(),
+		availabilityDAO.updateAvailability(id, availability.getData(), 
 				availability.getfKplaces());
 		return Response
-				.ok(new Availability(id, availability.getData(), availability.getOra(), availability.getfKplaces(),availability.getName(),availability.getColor()))
+				.ok(new Availability(id, availability.getData(), availability.getfKplaces(),availability.getReserved(),  availability.getName(),availability.getColor()))
 				.build();
+
+	}
+	
+	@PUT
+	@Path("/reserve/{id}")
+	public Response updateAvilabilityStatus(@PathParam("id") int id) {
+		// update the contact with the provided ID
+		// ...
+		availabilityDAO.updateAvailabilityStatus(id);
+		return Response.noContent().build();
 
 	}
 
