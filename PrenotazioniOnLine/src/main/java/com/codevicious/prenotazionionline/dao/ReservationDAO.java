@@ -1,9 +1,6 @@
 package com.codevicious.prenotazionionline.dao;
 
-import java.sql.Date;
-import java.sql.Time;
 import java.util.List;
-import java.util.Map;
 
 import org.joda.time.DateTime;
 import org.skife.jdbi.v2.sqlobject.Bind;
@@ -12,18 +9,19 @@ import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 import org.skife.jdbi.v2.sqlobject.customizers.Mapper;
 
-import com.codevicious.prenotazionionline.dao.mappers.AvailabilityMapper;
 import com.codevicious.prenotazionionline.dao.mappers.PlacesMapper;
+import com.codevicious.prenotazionionline.dao.mappers.ReservationMapper;
 import com.codevicious.prenotazionionline.representations.Availability;
 import com.codevicious.prenotazionionline.representations.Places;
+import com.codevicious.prenotazionionline.representations.Reservation;
 
-public interface AvailabilityDAO {
+public interface ReservationDAO {
 
-	@Mapper(AvailabilityMapper.class)
+	@Mapper(ReservationMapper.class)
 	@SqlQuery("select * from availability where ID = :id")
 	Availability getAvailabilityById(@Bind("id") int id);
 
-	@Mapper(AvailabilityMapper.class)
+	@Mapper(ReservationMapper.class)
 	@SqlQuery("select * from availability where 1")
 	List<Availability> getAllAvailability();
 
@@ -32,7 +30,7 @@ public interface AvailabilityDAO {
 			+ "FROM places INNER JOIN availability on places.ID = availability.FKplaces ORDER BY name")
 	List<Places> getPlaces();
 
-	@Mapper(AvailabilityMapper.class)
+	@Mapper(ReservationMapper.class)
 	@SqlQuery("SELECT availability.*, places.name as name, places.color as color FROM availability INNER JOIN places on places.ID = availability.FKplaces "
 			+ "WHERE (availability.Data > :start AND availability.Data < :end AND availability.FKplaces = :id)"
 			+ "			ORDER BY availability.Data")
@@ -43,15 +41,16 @@ public interface AvailabilityDAO {
 	@SqlUpdate("INSERT INTO availability (ID, Data, FK_places) VALUES (NULL,:Data, :FKplaces)")
 	int createAvailability(@Bind("Data") DateTime Data,  @Bind("FK_places") int FK_places);
 
-	@SqlUpdate("UPDATE availability SET Data=:Data, FKplaces=:FKplaces WHERE ID = :id")
-	void updateAvailability(@Bind("id") int id, @Bind("Data") DateTime Data,
-			@Bind("FKplaces") int FKplaces);
-	
-	@SqlUpdate("UPDATE availability SET reserved = NOT reserved  WHERE ID = :id")
-	void updateAvailabilityStatus(@Bind("id") int id);
+
 
 	@SqlUpdate("DELETE FROM availability WHERE ID = :id")
-	void deleteAvailability(@Bind("id") int id);
+	void deleteContact(@Bind("id") int id);
+
+	int createReservation();
+
+	List<Reservation> getReservations();
+
+	void deleteReservation(int id);
 
 	
 

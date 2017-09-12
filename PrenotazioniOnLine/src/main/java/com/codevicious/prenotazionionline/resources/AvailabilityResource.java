@@ -91,7 +91,7 @@ public class AvailabilityResource {
 	public Response deleteAvailability(@PathParam("id") int id) {
 		// delete the contact with the provided id
 		// ...
-		availabilityDAO.deleteContact(id);
+		availabilityDAO.deleteAvailability(id);
 		return Response.noContent().build();
 	}
 
