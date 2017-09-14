@@ -9,49 +9,30 @@ import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 import org.skife.jdbi.v2.sqlobject.customizers.Mapper;
 
-import com.codevicious.prenotazionionline.dao.mappers.PlacesMapper;
 import com.codevicious.prenotazionionline.dao.mappers.ReservationMapper;
-import com.codevicious.prenotazionionline.representations.Availability;
-import com.codevicious.prenotazionionline.representations.Places;
 import com.codevicious.prenotazionionline.representations.Reservation;
 
 public interface ReservationDAO {
 
 	@Mapper(ReservationMapper.class)
-	@SqlQuery("select * from availability where ID = :id")
-	Availability getAvailabilityById(@Bind("id") int id);
+	@SqlQuery("select * from reservations where ID = :id")
+	Reservation getReservationById(@Bind("id") long id);
 
 	@Mapper(ReservationMapper.class)
-	@SqlQuery("select * from availability where 1")
-	List<Availability> getAllAvailability();
-
-	@Mapper(PlacesMapper.class)
-	@SqlQuery("SELECT DISTINCT places.ID, places.name, places.address, places.lat, places.lon, places.type, places.color  "
-			+ "FROM places INNER JOIN availability on places.ID = availability.FKplaces ORDER BY name")
-	List<Places> getPlaces();
-
-	@Mapper(ReservationMapper.class)
-	@SqlQuery("SELECT availability.*, places.name as name, places.color as color FROM availability INNER JOIN places on places.ID = availability.FKplaces "
-			+ "WHERE (availability.Data > :start AND availability.Data < :end AND availability.FKplaces = :id)"
-			+ "			ORDER BY availability.Data")
-	List<Availability> getAvailabilityByMonthYearPlace(@Bind("start") String start, @Bind("end") String end,
-			@Bind("id") String id);
+	@SqlQuery("select * from resrvations where 1")
+	List<Reservation> getAllReservations();
 
 	@GetGeneratedKeys
-	@SqlUpdate("INSERT INTO availability (ID, Data, FK_places) VALUES (NULL,:Data, :FKplaces)")
-	int createAvailability(@Bind("Data") DateTime Data,  @Bind("FK_places") int FK_places);
+	@SqlUpdate(" INSERT INTO `reservations`(`ID`, `name`, `surname`, `email`, `address`, `borndate`, `tel`, `FK_availability`, `reservationdate`, `notes`) "
+			+ "VALUES (NULL,:name,:surname,:email,:address,:borndate,:tel,:fkAvailability,:reservationdate,:notes)")
+	int createReservation(@Bind("name") String name, @Bind("surname") String surname, @Bind("email") String email,
+			@Bind("address") String address, @Bind("borndate") DateTime borndate, @Bind("tel") String tel,
+			@Bind("fkAvailability") long fkAvailability, @Bind("reservationdate") DateTime reservationDate, @Bind("notes") String notes);
 
-
-
-	@SqlUpdate("DELETE FROM availability WHERE ID = :id")
-	void deleteContact(@Bind("id") int id);
-
-	int createReservation();
-
-	List<Reservation> getReservations();
-
-	void deleteReservation(int id);
+	@SqlUpdate("DELETE FROM reservation WHERE ID = :id")
+	void deleteReservation(@Bind("id") long id);
 
 	
+		
 
 }

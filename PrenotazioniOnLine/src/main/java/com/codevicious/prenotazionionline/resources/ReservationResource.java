@@ -3,17 +3,21 @@ package com.codevicious.prenotazionionline.resources;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Optional;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.skife.jdbi.v2.DBI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +25,7 @@ import org.slf4j.LoggerFactory;
 import com.codevicious.prenotazionionline.dao.ReservationDAO;
 import com.codevicious.prenotazionionline.representations.Reservation;
 
-@Path("/prenotazioni")
+@Path("/reservation")
 @Produces(MediaType.APPLICATION_JSON)
 
 public class ReservationResource {
@@ -34,21 +38,42 @@ public class ReservationResource {
 	}
 
 	@GET
-	public Response getReservations(@QueryParam("place") String place, @QueryParam("start") String start, @QueryParam("end") String end) {
+	@Path("/{id}")
+	public Response getReservations(@PathParam("id") long id) {
 		// retrieve information about all the availabilities
 		// ...
-				
-		List<Reservation> reservation = reservationDAO.getReservations();
-		return Response.noContent().build();
+
+		if (!Optional.ofNullable(id).isPresent()) {
+			List<Reservation> reservation = reservationDAO.getAllReservations();
+			return Response.ok(reservation).build();
+
+		} else {
+			Reservation reservation = reservationDAO.getReservationById(id);
+			return Response.ok(reservation).build();
+
+		}
+
 	}
 
-
 	@POST
-	public Response createReservation(Reservation reservation) throws URISyntaxException {
+	@Path("/store")
+	@Consumes({ MediaType.MULTIPART_FORM_DATA })
+	public Response createReservation(@FormDataParam("name") String name, @FormDataParam("surname") String surname,
+			@FormDataParam("email") String email, @FormDataParam("address") String address,
+			@FormDataParam("borndate") String borndate, @FormDataParam("phone") String phone,
+			@FormDataParam("note") String note, @FormDataParam("fkavailability") long fkavailability,
+			@FormDataParam("reservationdate") String reservationdate) throws URISyntaxException {
 		// store the new reservation
 		// ...
 
-		int newReservationID = reservationDAO.createReservation();
+		DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss");
+		DateTimeFormatter fmt2 = DateTimeFormat.forPattern("yyyy-MM-dd");
+
+		long newReservationID = reservationDAO.createReservation(name, surname, email, address,
+				fmt2.parseDateTime(borndate), phone, fkavailability, fmt.parseDateTime(reservationdate), note);
+
+		LOGGER.debug(String.valueOf(newReservationID) + " " + name + surname + email + address
+				+ fmt2.parseDateTime(borndate) + phone + fkavailability + fmt.parseDateTime(reservationdate) + note);
 
 		return Response.created(new URI(String.valueOf(newReservationID))).build();
 	}
@@ -61,7 +86,5 @@ public class ReservationResource {
 		reservationDAO.deleteReservation(id);
 		return Response.noContent().build();
 	}
-
-
 
 }

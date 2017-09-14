@@ -54,6 +54,12 @@
 			<artifactId>dropwizard-client</artifactId>
 			<version>${dropwizard.version}</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/io.dropwizard/dropwizard-forms -->
+		<dependency>
+			<groupId>io.dropwizard</groupId>
+			<artifactId>dropwizard-forms</artifactId>
+			<version>${dropwizard.version}</version>
+		</dependency>
 	</dependencies>
 
 	<build>

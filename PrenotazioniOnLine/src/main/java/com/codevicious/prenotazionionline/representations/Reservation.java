@@ -1,111 +1,120 @@
 package com.codevicious.prenotazionionline.representations;
 
-import java.sql.Time;
 import java.util.Date;
 
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Reservation {
-	
-	private int id;
-	private DateTime reservationDate;	
+
+	private long id;
+	private DateTime reservationDate;
 	private String name;
 	private String surname;
-	private String bornPlace;
-	private Date bornDate;
+	private String address;
+	private String email;
+	private DateTime bornDate;
 	private String phone;
-	private String note;	
-	private int fKavailability;
-	
+	private String note;
+	private long fKavailability;
 
 	public Reservation() {
 
 	}
 
-	public Reservation(int id, DateTime data, int fKplaces, Boolean reserved, String name, String color) {
-		this.id = id;		
-		this.data = data;
-		this.fKplaces = fKplaces;
+	public Reservation(long id, DateTime reservationDate, String name, String surname, String address, String email, DateTime bornDate,
+			String phone, String note, long fKavailability) {
+		this.id = id;
+		this.reservationDate = reservationDate;
 		this.name = name;
-		this.color = color;
-		this.reserved = reserved;
+		this.surname = surname;
+		this.address = address;
+		this.email = email;
+		this.bornDate = bornDate;
+		this.phone = phone;
+		this.note = note;
+		this.fKavailability = fKavailability;
 	}
 
-	@JsonProperty("id")
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	
-	@JsonProperty("start")
-	public String getStart() {
-		DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss");
-		return fmt.print(data);
+	public DateTime getReservationDate() {
+		return reservationDate;
 	}
 
-	
-	@JsonProperty("data")
-	public DateTime getData() {
-		return data;
-	}
-
-
-	@JsonProperty("FKplaces")
-	public int getfKplaces() {
-		return fKplaces;
-	}
-	
-	@JsonProperty("end")
-	public String getEnd() {
-		DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss");		
-		return fmt.print(data.plusMinutes(30));
-	}
-
-	@JsonProperty("title")
 	public String getName() {
 		return name;
 	}
 
-	@JsonProperty("textColor")
-	public String getColor() {
-		return color;
+	public String getSurname() {
+		return surname;
 	}
 
-	@JsonProperty("reserved")
-	public Boolean getReserved() {
-		return reserved;
+	public String getAddress() {
+		return address;
+	}
+	
+	public String getEmail() {
+		return email;
 	}
 
-	@JsonProperty("id")
-	public void setId(int id) {
+
+	public DateTime getBornDate() {
+		return bornDate;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public String getNote() {
+		return note;
+	}
+
+	public long getfKavailability() {
+		return fKavailability;
+	}
+
+	public void setId(long id) {
 		this.id = id;
 	}
 
-	@JsonProperty("start")
-	public void setData(DateTime data) {
-		this.data = data;
-	}
-
-	@JsonProperty("FKplaces")
-	public void setfKplaces(int fKplaces) {
-		this.fKplaces = fKplaces;
-	}
-
-	@JsonProperty("reserved")
-	public void setReserved(Boolean reserved) {
-		this.reserved = reserved;
+	public void setReservationDate(DateTime reservationDate) {
+		this.reservationDate = reservationDate;
 	}
 
 	public void setName(String name) {
 		this.name = name;
 	}
 
-	public void setColor(String color) {
-		this.color = color;
+	public void setSurname(String surname) {
+		this.surname = surname;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+
+	public void setBornDate(DateTime bornDate) {
+		this.bornDate = bornDate;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public void setNote(String note) {
+		this.note = note;
+	}
+
+	public void setfKavailability(long fKavailability) {
+		this.fKavailability = fKavailability;
 	}
 
 }

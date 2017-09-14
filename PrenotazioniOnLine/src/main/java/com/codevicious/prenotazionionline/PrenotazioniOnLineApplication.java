@@ -9,9 +9,11 @@ import org.slf4j.LoggerFactory;
 
 import com.codevicious.prenotazionionline.resources.AvailabilityResource;
 import com.codevicious.prenotazionionline.resources.Dashboard;
+import com.codevicious.prenotazionionline.resources.ReservationResource;
 
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
+import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.jdbi.DBIFactory;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
@@ -35,6 +37,7 @@ public class PrenotazioniOnLineApplication extends Application<PrenotazioniOnLin
 
 	public void initialize(Bootstrap<PrenotazioniOnLineConfiguration> bootstrap) {
 		bootstrap.addBundle(new ViewBundle<PrenotazioniOnLineConfiguration>());
+		bootstrap.addBundle(new MultiPartBundle());
 		bootstrap.addBundle(new AssetsBundle());
 
 	}
@@ -52,6 +55,8 @@ public class PrenotazioniOnLineApplication extends Application<PrenotazioniOnLin
 		
 		environment.jersey().register(new Dashboard(client));		
 		environment.jersey().register(new AvailabilityResource(jdbi));
+		environment.jersey().register(new ReservationResource(jdbi));
+		
 		
 	}
 }

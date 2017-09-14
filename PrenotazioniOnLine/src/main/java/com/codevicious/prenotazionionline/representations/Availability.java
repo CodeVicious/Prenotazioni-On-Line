@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Availability {
 	
-	private int id;
+	private long id;
 	private DateTime data;	
 	private Time ora;
 	private int fKplaces;
@@ -27,7 +27,7 @@ public class Availability {
 		this.reserved = false;
 	}
 
-	public Availability(int id, DateTime data, int fKplaces, Boolean reserved, String name, String color) {
+	public Availability(long id, DateTime data, int fKplaces, Boolean reserved, String name, String color) {
 		this.id = id;		
 		this.data = data;
 		this.fKplaces = fKplaces;
@@ -37,7 +37,7 @@ public class Availability {
 	}
 
 	@JsonProperty("id")
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
@@ -82,7 +82,7 @@ public class Availability {
 	}
 
 	@JsonProperty("id")
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 

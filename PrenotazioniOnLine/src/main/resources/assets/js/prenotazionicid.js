@@ -1,89 +1,93 @@
-$(document).ready(function() {
+$(document).ready(
+		function() {
 
-	$("#prenotazioneModale").validator().on("submit", function(event) {
-		if (event.isDefaultPrevented()) {
-			// handle the invalid form...
-			formError();
-			submitMSG(false, "Did you fill in the form properly?");
-		} else {
-			// everything looks good!
-			event.preventDefault();
-			submitForm();
-		}
-	});
+			$("#prenotazioneModale").validator().on("submit", function(event) {
+				if (event.isDefaultPrevented()) {
+					// handle the invalid form...
+					formError();
+					submitMSG(false, "Did you fill in the form properly?");
+				} else {
+					// everything looks good!
+					event.preventDefault();
+					submitForm();
+				}
+			});
 
-	$("#SelezioneUfficio").on('change', function() {
-		var selected = []
-		selected = $('#SelezioneUfficio').val()
-		var moment = $('#calendar').fullCalendar('getDate');
-		$('#calendar').fullCalendar('removeEventSources');
-		$('#calendar').fullCalendar('removeEvents');
-		$('#calendar').fullCalendar('addEventSource', {
-			url : '/disponibilita?place=' + selected,
-			type : 'GET', // Send post data
-			error : function() {
-				alert('There was an error while fetching events.');
-			}
+			$("#SelezioneUfficio").on('change', function() {
+				var selected = []
+				selected = $('#SelezioneUfficio').val()
+				var moment = $('#calendar').fullCalendar('getDate');
+				$('#calendar').fullCalendar('removeEventSources');
+				$('#calendar').fullCalendar('removeEvents');
+				$('#calendar').fullCalendar('addEventSource', {
+					url : '/disponibilita?place=' + selected,
+					type : 'GET', // Send post data
+					error : function() {
+						alert('There was an error while fetching events.');
+					}
+				});
+
+				$('#calendar').fullCalendar('rerenderEvents');
+
+			});
+
+			$('#calendar').fullCalendar(
+					{
+						header : {
+							left : 'prev,next today',
+							center : 'title',
+							right : 'month,agendaWeek,agendaDay'
+						},
+						editable : true,
+						eventLimit : true, // allow "more" link when too many
+											// events
+						events : [],
+						eventClick : function(calEvent, jsEvent, view) {
+
+							// $(this).css('border-color', 'red');
+							$("#prenotazioneModale.modal-body #availability")
+									.val(calEvent.FKplaces);
+
+							$("#prenotazioneModale").modal('show');
+
+						},
+
+					});
+
 		});
-
-		$('#calendar').fullCalendar('rerenderEvents');
-
-	});
-
-	$('#schedaprenotazione').click(function(e) {
-		e.preventDefault();
-		alert(e)
-	});
-
-	$('#calendar').fullCalendar({
-		header : {
-			left : 'prev,next today',
-			center : 'title',
-			right : 'month,agendaWeek,agendaDay'
-		},
-		editable : true,
-		eventLimit : true, // allow "more" link when too many events
-		events : [],
-		eventClick : function(calEvent, jsEvent, view) {
-
-			// $(this).css('border-color', 'red');
-
-			$("#prenotazioneModale").modal('show');
-
-		},
-		dayClick : function(date, jsEvent, view) {
-
-			alert('Clicked on: ' + date.format());
-
-			alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
-
-			alert('Current view: ' + view.name);
-
-			// change the day's background color just for fun
-			$(this).css('background-color', 'red');
-
-		}
-	});
-
-});
 
 function submitForm() {
 	$("#prenotazioneModale").modal('hide');
 
-	var email = $("#email").val();
-	var message = $("#message").val();
+	// Get form
+	var form = $('#schedaprenotazione')[0];
+
+	// Create an FormData object
+	var data = new FormData(form);
+
+	data.append("reservationdate", moment().format() );
 
 	$.ajax({
 		type : "POST",
-		url : "php/form-process.php",
-		data : "name=" + name + "&email=" + email + "&message=" + message,
+		enctype : 'multipart/form-data',
+		url : "/reservation/store",
+		data : data,
+		processData : false,
+		contentType : false,
+		cache : false,
+		timeout : 600000,
 		success : function(text) {
+			alert(text);
 			if (text == "success") {
 				formSuccess();
 			} else {
 				formError();
 				submitMSG(false, text);
 			}
+		},
+		error : function(XMLHttpRequest, textStatus, errorThrown) {
+			alert("Status: " + textStatus);
+			alert("Error: " + errorThrown);
 		}
 	});
 }
@@ -111,4 +115,3 @@ function submitMSG(valid, msg) {
 	$('#msgSubmit').removeClass().addClass(msgClasses).text(msg);
 	$('#esitoModal').modal('show');
 }
-	
