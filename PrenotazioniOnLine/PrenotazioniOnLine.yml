@@ -1,6 +1,14 @@
 
 database:
   driverClass: com.mysql.cj.jdbc.Driver
-  user: prenotazioniDbUser
+  user: prenotazioniDbUs
   password: root
   url: jdbc:mysql://localhost:3306/prenotazionicid?useLegacyDatetimeCode=false&serverTimezone=UTC
+  
+smtpparams:
+  host: aspmx.l.google.com
+  port: 25
+  username: ff
+  pw: ff
+  
+  

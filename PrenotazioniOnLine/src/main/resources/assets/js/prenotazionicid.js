@@ -44,8 +44,9 @@ $(document).ready(
 						events : [],
 						eventClick : function(calEvent, jsEvent, view) {
 
-							// $(this).css('border-color', 'red');
-							$("#prenotazioneModale.modal-body #availability")
+							
+							
+							$("#availability")
 									.val(calEvent.FKplaces);
 
 							$("#prenotazioneModale").modal('show');
@@ -64,8 +65,15 @@ function submitForm() {
 
 	// Create an FormData object
 	var data = new FormData(form);
+	// Display the key/value pairs
+
 
 	data.append("reservationdate", moment().format() );
+	
+	for (var pair of data.entries()) {
+	    console.log(pair[0]+ ', ' + pair[1]); 
+	}
+	
 
 	$.ajax({
 		type : "POST",
@@ -77,14 +85,11 @@ function submitForm() {
 		cache : false,
 		timeout : 600000,
 		success : function(text) {
-			alert(text);
-			if (text == "success") {
-				formSuccess();
-			} else {
-				formError();
-				submitMSG(false, text);
+			
+				formSuccess(text);
+			
 			}
-		},
+		,
 		error : function(XMLHttpRequest, textStatus, errorThrown) {
 			alert("Status: " + textStatus);
 			alert("Error: " + errorThrown);
@@ -92,12 +97,12 @@ function submitForm() {
 	});
 }
 
-function formSuccess() {
+function formSuccess(text) {
 
 	$('#schedaprenotazione')[0].reset();
-	$(this).find('#prenotazioneModale')[0].reset();
+	
 
-	submitMSG(true, "Prenotazione Confermata!");
+	submitMSG(true, "Prenotazione Confermata! <br/> N.Prenotazione "+text);
 }
 
 function formError(text) {
@@ -112,6 +117,6 @@ function submitMSG(valid, msg) {
 		var msgClasses = "h3 text-center text-danger";
 	}
 
-	$('#msgSubmit').removeClass().addClass(msgClasses).text(msg);
+	$('#msgSubmit').removeClass().addClass(msgClasses).html(msg);
 	$('#esitoModal').modal('show');
 }

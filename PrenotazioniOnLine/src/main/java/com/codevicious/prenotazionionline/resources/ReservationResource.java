@@ -18,10 +18,12 @@ import javax.ws.rs.core.Response;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 import org.skife.jdbi.v2.DBI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.codevicious.prenotazionionline.dao.AvailabilityDAO;
 import com.codevicious.prenotazionionline.dao.ReservationDAO;
 import com.codevicious.prenotazionionline.representations.Reservation;
 
@@ -31,10 +33,12 @@ import com.codevicious.prenotazionionline.representations.Reservation;
 public class ReservationResource {
 
 	private final ReservationDAO reservationDAO;
+	private final AvailabilityDAO availabilityDAO;
 	private static final Logger LOGGER = LoggerFactory.getLogger(ReservationResource.class);
 
 	public ReservationResource(DBI jdbi) {
 		reservationDAO = jdbi.onDemand(ReservationDAO.class);
+		availabilityDAO = jdbi.onDemand(AvailabilityDAO.class);
 	}
 
 	@GET
@@ -66,16 +70,15 @@ public class ReservationResource {
 		// store the new reservation
 		// ...
 
-		DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss");
+		DateTimeFormatter fmt = ISODateTimeFormat.dateTimeNoMillis();
 		DateTimeFormatter fmt2 = DateTimeFormat.forPattern("yyyy-MM-dd");
 
 		long newReservationID = reservationDAO.createReservation(name, surname, email, address,
 				fmt2.parseDateTime(borndate), phone, fkavailability, fmt.parseDateTime(reservationdate), note);
+		
+		availabilityDAO.updateAvailabilityReserved(fkavailability, true);
 
-		LOGGER.debug(String.valueOf(newReservationID) + " " + name + surname + email + address
-				+ fmt2.parseDateTime(borndate) + phone + fkavailability + fmt.parseDateTime(reservationdate) + note);
-
-		return Response.created(new URI(String.valueOf(newReservationID))).build();
+		return Response.ok(String.valueOf(newReservationID)).build();
 	}
 
 	@DELETE

@@ -108,14 +108,6 @@ public class AvailabilityResource {
 
 	}
 	
-	@PUT
-	@Path("/reserve/{id}")
-	public Response updateAvilabilityStatus(@PathParam("id") int id) {
-		// update the contact with the provided ID
-		// ...
-		availabilityDAO.updateAvailabilityStatus(id);
-		return Response.noContent().build();
-
-	}
+	
 
 }

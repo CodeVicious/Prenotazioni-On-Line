@@ -47,8 +47,8 @@ public interface AvailabilityDAO {
 	void updateAvailability(@Bind("id") int id, @Bind("Data") DateTime Data,
 			@Bind("FKplaces") int FKplaces);
 	
-	@SqlUpdate("UPDATE availability SET reserved = NOT reserved  WHERE ID = :id")
-	void updateAvailabilityStatus(@Bind("id") int id);
+	@SqlUpdate("UPDATE availability SET reserved = :value  WHERE ID = :id")
+	void updateAvailabilityReserved(@Bind("id") long id, @Bind("value") Boolean value);
 
 	@SqlUpdate("DELETE FROM availability WHERE ID = :id")
 	void deleteAvailability(@Bind("id") int id);

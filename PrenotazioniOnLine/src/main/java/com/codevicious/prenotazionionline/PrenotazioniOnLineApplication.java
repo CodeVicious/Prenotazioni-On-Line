@@ -46,6 +46,10 @@ public class PrenotazioniOnLineApplication extends Application<PrenotazioniOnLin
 	public void run(PrenotazioniOnLineConfiguration configuration, Environment environment) throws Exception {
 
 		LOGGER.info("Method App#run() called");
+		LOGGER.info(configuration.getSMTPHost().get());
+		LOGGER.info(configuration.getSMTPPort().get());
+		LOGGER.info(configuration.getSMTPUname().get());
+		LOGGER.info(configuration.getSMTPPw().get());
 
 		final DBIFactory factory = new DBIFactory();
 		final DBI jdbi = factory
