@@ -34,12 +34,12 @@ public class PrenotazioniOnLineConfiguration extends Configuration {
 	
 	@JsonIgnore
 	public Optional<String> getSMTPHost(){
-		return Optional.ofNullable(smtpparams.get("host"));
+		return Optional.of(smtpparams.get("host"));
 	}
 
 	@JsonIgnore
-	public Optional<String> getSMTPPort(){
-		return Optional.ofNullable(smtpparams.get("port"));
+	public  Optional<Integer> getSMTPPort(){
+		return Optional.of(Integer.parseInt(smtpparams.get("port")));
 	}
 	
 	@JsonIgnore
