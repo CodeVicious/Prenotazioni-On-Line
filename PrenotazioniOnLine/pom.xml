@@ -10,6 +10,7 @@
 	<properties>
 		<dropwizard.version>1.1.0</dropwizard.version>
 		<mysql.version>6.0.6</mysql.version>
+		<commons.email.version>1.5</commons.email.version>
 	</properties>
 
 	<dependencies>
@@ -60,6 +61,13 @@
 			<artifactId>dropwizard-forms</artifactId>
 			<version>${dropwizard.version}</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-email -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-email</artifactId>
+			<version>${commons.email.version}</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
