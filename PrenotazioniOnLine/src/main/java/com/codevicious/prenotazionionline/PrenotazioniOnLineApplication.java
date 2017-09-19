@@ -7,7 +7,6 @@ import org.skife.jdbi.v2.DBI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.codevicious.prenotazionionline.helper.EmailServiceBuilder;
 import com.codevicious.prenotazionionline.resources.AvailabilityResource;
 import com.codevicious.prenotazionionline.resources.Dashboard;
 import com.codevicious.prenotazionionline.resources.ReservationResource;
@@ -27,10 +26,9 @@ import io.dropwizard.views.ViewBundle;
 public class PrenotazioniOnLineApplication extends Application<PrenotazioniOnLineConfiguration> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PrenotazioniOnLineApplication.class);
-	private final Email;
 
 	public static void main(String[] args) throws Exception {
-		Email = new EmailServiceBuilder(cfg)
+
 		new PrenotazioniOnLineApplication().run(args);
 	}
 
@@ -49,21 +47,15 @@ public class PrenotazioniOnLineApplication extends Application<PrenotazioniOnLin
 	public void run(PrenotazioniOnLineConfiguration configuration, Environment environment) throws Exception {
 
 		LOGGER.info("Method App#run() called");
-		LOGGER.info(configuration.getSMTPHost().get());
-		LOGGER.info(configuration.getSMTPPort().get().toString());
-		LOGGER.info(configuration.getSMTPUname().get());
-		LOGGER.info(configuration.getSMTPPw().get());
+	
 
 		final DBIFactory factory = new DBIFactory();
-		final DBI jdbi = factory
-		.build(environment, configuration.getDataSourceFactory(), "mysql");
-		final Client client = new 
-				JerseyClientBuilder().build();
-		
-		environment.jersey().register(new Dashboard(client));		
+		final DBI jdbi = factory.build(environment, configuration.getDataSourceFactory(), "mysql");
+		final Client client = new JerseyClientBuilder().build();
+
+		environment.jersey().register(new Dashboard(client));
 		environment.jersey().register(new AvailabilityResource(jdbi));
-		environment.jersey().register(new ReservationResource(jdbi));
-		
-		
+		environment.jersey().register(new ReservationResource(jdbi,configuration));
+
 	}
 }

@@ -1,9 +1,6 @@
 package com.codevicious.prenotazionionline.dao;
 
-import java.sql.Date;
-import java.sql.Time;
 import java.util.List;
-import java.util.Map;
 
 import org.joda.time.DateTime;
 import org.skife.jdbi.v2.sqlobject.Bind;
@@ -20,11 +17,13 @@ import com.codevicious.prenotazionionline.representations.Places;
 public interface AvailabilityDAO {
 
 	@Mapper(AvailabilityMapper.class)
-	@SqlQuery("select * from availability where ID = :id")
-	Availability getAvailabilityById(@Bind("id") int id);
+	@SqlQuery("SELECT availability.*, places.name as name, places.color as color FROM availability INNER JOIN places on places.ID = availability.FKplaces"
+			+ " where availability.ID = :id")
+	Availability getAvailabilityById(@Bind("id") long fkavailability);
 
 	@Mapper(AvailabilityMapper.class)
-	@SqlQuery("select * from availability where 1")
+	@SqlQuery("SELECT availability.*, places.name as name, places.color as color FROM availability INNER JOIN places on places.ID = availability.FKplaces"
+			+ " from availability where 1")
 	List<Availability> getAllAvailability();
 
 	@Mapper(PlacesMapper.class)

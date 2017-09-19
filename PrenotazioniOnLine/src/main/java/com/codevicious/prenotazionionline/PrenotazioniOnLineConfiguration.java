@@ -1,10 +1,10 @@
 package com.codevicious.prenotazionionline;
 
 
-import java.util.Map;
-import java.util.Optional;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.codevicious.prenotazionionline.factories.EmailServiceFactory;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.dropwizard.Configuration;
@@ -12,8 +12,9 @@ import io.dropwizard.db.DataSourceFactory;
 
 public class PrenotazioniOnLineConfiguration extends Configuration {
 	
-	
-    private Map<String, String> smtpparams;
+	@Valid
+	@NotNull
+    private EmailServiceFactory smtpParams = new EmailServiceFactory();
 
 	@JsonProperty
 	private DataSourceFactory database = new DataSourceFactory();
@@ -22,34 +23,14 @@ public class PrenotazioniOnLineConfiguration extends Configuration {
 		return database;
 	}
 
-	@JsonProperty("smtpparams")
-	public Map<String, String> getSmtpparams() {
-		return smtpparams;
+	@JsonProperty("smtpParams")
+	public EmailServiceFactory getSmtpparams() {
+		return smtpParams;
 	}
 
 	@JsonProperty("smtpparams")
-	public void setSmtpparams(Map<String, String> smtpparams) {
-		this.smtpparams = smtpparams;
-	}
-	
-	@JsonIgnore
-	public Optional<String> getSMTPHost(){
-		return Optional.of(smtpparams.get("host"));
-	}
-
-	@JsonIgnore
-	public  Optional<Integer> getSMTPPort(){
-		return Optional.of(Integer.parseInt(smtpparams.get("port")));
-	}
-	
-	@JsonIgnore
-	public Optional<String> getSMTPUname(){
-		return Optional.ofNullable(smtpparams.get("username"));
-	}
-	
-	@JsonIgnore
-	public Optional<String> getSMTPPw(){
-		return Optional.ofNullable(smtpparams.get("pw"));
+	public void setSmtpparams(EmailServiceFactory smtpParams) {
+		this.smtpParams = smtpParams;
 	}
 	
 

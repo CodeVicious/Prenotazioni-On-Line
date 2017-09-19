@@ -1,15 +1,15 @@
 
 database:
   driverClass: com.mysql.cj.jdbc.Driver
-  user: prenotazioniDbUs
+  user: prenotazioniDbUser
   password: root
   url: jdbc:mysql://localhost:3306/prenotazionicid?useLegacyDatetimeCode=false&serverTimezone=UTC
   
 smtpparams:
-  host: aspmx.l.google.com
-  port: 25
-  username: ff
-  pw: ff
+  host: smtp.gmail.com
+  port: 587
+  username: gcodevico@comune.san-miniato.pi.it
+  pw: NuovaVita17
   
 
   

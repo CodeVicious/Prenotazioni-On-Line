@@ -43,14 +43,11 @@ $(document).ready(
 											// events
 						events : [],
 						eventClick : function(calEvent, jsEvent, view) {
-
-							
-							
+							console.log(calEvent.id);
 							$("#availability")
-									.val(calEvent.FKplaces);
+									.val(calEvent.id);
 
 							$("#prenotazioneModale").modal('show');
-
 						},
 
 					});
@@ -69,10 +66,6 @@ function submitForm() {
 
 
 	data.append("reservationdate", moment().format() );
-	
-	for (var pair of data.entries()) {
-	    console.log(pair[0]+ ', ' + pair[1]); 
-	}
 	
 
 	$.ajax({
