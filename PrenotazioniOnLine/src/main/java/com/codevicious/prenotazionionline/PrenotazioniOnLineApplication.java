@@ -2,6 +2,7 @@ package com.codevicious.prenotazionionline;
 
 import javax.ws.rs.client.Client;
 
+import org.eclipse.jetty.servlet.ErrorPageErrorHandler;
 import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.skife.jdbi.v2.DBI;
 import org.slf4j.Logger;
@@ -9,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import com.codevicious.prenotazionionline.resources.AvailabilityResource;
 import com.codevicious.prenotazionionline.resources.Dashboard;
+import com.codevicious.prenotazionionline.resources.ErrorResource;
 import com.codevicious.prenotazionionline.resources.ReservationResource;
 
 import io.dropwizard.Application;
@@ -46,7 +48,20 @@ public class PrenotazioniOnLineApplication extends Application<PrenotazioniOnLin
 	@Override
 	public void run(PrenotazioniOnLineConfiguration configuration, Environment environment) throws Exception {
 
-		LOGGER.info("Method App#run() called");
+        // init Error pages
+    	 final ErrorPageErrorHandler epeh = new ErrorPageErrorHandler();
+         // 400 - Bad Request, leave alone
+         epeh.addErrorPage(401, "/error/general-error");
+         epeh.addErrorPage(402, "/error/general-error");
+         epeh.addErrorPage(403, "/error/403");
+         epeh.addErrorPage(404, "/error/404");
+         epeh.addErrorPage(405, 499, "/error/general-error");
+         epeh.addErrorPage(500, 599, "/error/general-error");
+         environment.getApplicationContext().setErrorHandler(epeh);
+         environment.getAdminContext().setErrorHandler(epeh);
+         
+         ErrorResource  errorResource = new ErrorResource();
+         environment.jersey().register(errorResource);
 	
 
 		final DBIFactory factory = new DBIFactory();
