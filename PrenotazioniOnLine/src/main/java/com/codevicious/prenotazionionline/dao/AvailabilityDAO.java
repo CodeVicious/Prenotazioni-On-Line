@@ -23,7 +23,7 @@ public interface AvailabilityDAO {
 
 	@Mapper(AvailabilityMapper.class)
 	@SqlQuery("SELECT availability.*, places.name as name, places.color as color FROM availability INNER JOIN places on places.ID = availability.FKplaces"
-			+ " from availability where 1")
+			+ " where 1")
 	List<Availability> getAllAvailability();
 
 	@Mapper(PlacesMapper.class)

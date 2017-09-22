@@ -19,9 +19,12 @@ import org.skife.jdbi.v2.DBI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.codevicious.prenotazionionline.auth.User;
 import com.codevicious.prenotazionionline.dao.AvailabilityDAO;
 import com.codevicious.prenotazionionline.representations.Availability;
 import com.codevicious.prenotazionionline.representations.Places;
+
+import io.dropwizard.auth.Auth;
 
 @Path("/disponibilita")
 @Produces(MediaType.APPLICATION_JSON)
@@ -57,7 +60,7 @@ public class AvailabilityResource {
 
 	@GET
 	@Path("/all")
-	public Response getAllAvailability() {
+	public Response getAllAvailability(@Auth User user) {
 		// retrieve information about all the availabilities
 		// ...
 
