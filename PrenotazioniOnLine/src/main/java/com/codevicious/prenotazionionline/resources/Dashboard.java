@@ -14,42 +14,51 @@ import javax.ws.rs.core.Response;
 
 import com.codevicious.prenotazionionline.representations.Availability;
 import com.codevicious.prenotazionionline.representations.Places;
+import com.codevicious.prenotazionionline.views.AdminView;
 import com.codevicious.prenotazionionline.views.AvailabilityView;
 import com.codevicious.prenotazionionline.views.DashboardView;
-
 
 @Produces(MediaType.TEXT_HTML)
 @Path("/dashboard")
 public class Dashboard {
 	private final Client client;
-	public Dashboard( Client client ) {
+
+	public Dashboard(Client client) {
 		this.client = client;
 	}
-	
-	@GET	
+
+	@GET
 	public DashboardView showDaschboard() {
 
-	WebTarget availResource =	client.target("http://localhost:8080/disponibilita/places");
-	Invocation.Builder invocationBuilder = availResource.request(MediaType.APPLICATION_JSON_TYPE);
-	
-	Response response = invocationBuilder.get();			
-	
-	@SuppressWarnings("unchecked")
-	List<Places> places = response.readEntity(List.class);
-	
-	return new DashboardView(places);
+		WebTarget availResource = client.target("http://localhost:8080/disponibilita/places");
+		Invocation.Builder invocationBuilder = availResource.request(MediaType.APPLICATION_JSON_TYPE);
+
+		Response response = invocationBuilder.get();
+
+		@SuppressWarnings("unchecked")
+		List<Places> places = response.readEntity(List.class);
+
+		return new DashboardView(places);
 	}
-	
+
 	@GET
 	@Path("/showAvailabiliy")
 	public AvailabilityView showAvailabiliy(@QueryParam("id") int id) {
-	WebTarget availResource =	client.target("http://localhost:8080/disponibilita/"+id);
-	Invocation.Builder invocationBuilder = availResource.request(MediaType.APPLICATION_JSON_TYPE);
-	
-	Response response = invocationBuilder.get();			
-	Availability avail = response.readEntity(Availability.class);
-	
-	return new AvailabilityView(avail);
+		WebTarget availResource = client.target("http://localhost:8080/disponibilita/" + id);
+		Invocation.Builder invocationBuilder = availResource.request(MediaType.APPLICATION_JSON_TYPE);
+
+		Response response = invocationBuilder.get();
+		Availability avail = response.readEntity(Availability.class);
+
+		return new AvailabilityView(avail);
 	}
-	
+
+	@GET
+	@Path("/admin")
+	public AdminView adminReservations() {
+
+		return new AdminView();
+
+	}
+
 }

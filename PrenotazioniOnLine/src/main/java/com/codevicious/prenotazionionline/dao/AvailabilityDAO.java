@@ -15,7 +15,7 @@ import com.codevicious.prenotazionionline.representations.Availability;
 import com.codevicious.prenotazionionline.representations.Places;
 
 public interface AvailabilityDAO {
-
+	
 	@Mapper(AvailabilityMapper.class)
 	@SqlQuery("SELECT availability.*, places.name as name, places.color as color FROM availability INNER JOIN places on places.ID = availability.FKplaces"
 			+ " where availability.ID = :id")
@@ -53,5 +53,4 @@ public interface AvailabilityDAO {
 	void deleteAvailability(@Bind("id") int id);
 
 	
-
 }
