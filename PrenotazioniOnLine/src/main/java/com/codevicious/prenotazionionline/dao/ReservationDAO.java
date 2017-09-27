@@ -34,7 +34,7 @@ public interface ReservationDAO {
 	
 
 	@GetGeneratedKeys
-	@SqlUpdate(" INSERT INTO `reservations`(`ID`, `name`, `surname`, `email`, `address`, `borndate`, `tel`, `FK_availability`, `reservationdate`, `notes`) "
+	@SqlUpdate(" INSERT INTO `reservations`(`ID`, `name`, `surname`, `email`, `address`, `borndate`, `phone`, `fkavailability`, `reservationdate`, `notes`) "
 			+ "VALUES (NULL,:name,:surname,:email,:address,:borndate,:tel,:fkAvailability,:reservationdate,:notes)")
 	int createReservation(@Bind("name") String name, @Bind("surname") String surname, @Bind("email") String email,
 			@Bind("address") String address, @Bind("borndate") DateTime borndate, @Bind("tel") String tel,
@@ -44,7 +44,7 @@ public interface ReservationDAO {
 	@SqlUpdate("DELETE FROM reservation WHERE ID = :id")
 	void deleteReservation(@Bind("id") long id);
 
-	@SqlQuery("SELECT COUNT(*) as count FROM reservations INNER JOIN availability on reservations.FK_availability = availability.ID")
+	@SqlQuery("SELECT COUNT(*) as count FROM reservations ")
 	long getReservationsNumber();
 
 }

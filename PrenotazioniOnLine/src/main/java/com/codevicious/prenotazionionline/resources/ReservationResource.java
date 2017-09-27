@@ -15,8 +15,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.client.Invocation;
-import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -169,14 +167,14 @@ public class ReservationResource {
 	@GET
 	@Path("/showReservations")
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public Response getAllReserved(@QueryParam("iDisplayStart") String pageNo,
-			@QueryParam("iDisplayLength") String pageSize, @QueryParam("iSortCol_0") String colIndex,
-			@QueryParam("sSortDir_0") String sortDirection, @QueryParam("sSearch") String GLOBAL_SEARCH_TERM) {
+	public Response getAllReserved(@QueryParam("draw") long draw, @QueryParam("start") String pageNo,
+			@QueryParam("length") String pageSize, @QueryParam("iSortCol_0") String colIndex,
+			@QueryParam("sSortDir_0") String sortDirection, @QueryParam("search[value]") String GLOBAL_SEARCH_TERM) {
 
 		// retrieve All the reserved places
 		// ...
 
-		String[] columnNames = { "id", "name", "surname", "email", "address", "borndate", "tel", "reservationdate",
+		String[] columnNames = { "id", "name", "surname", "email", "address", "borndate", "phone", "reservationdate",
 				"notes" };
 
 		int listDisplayAmount = 10;
@@ -205,6 +203,8 @@ public class ReservationResource {
 			if (!sortDirection.equals("asc"))
 				dir = "desc";
 		}
+		if(GLOBAL_SEARCH_TERM == null)
+			GLOBAL_SEARCH_TERM = "";
 
 		long totalRecords = reservationDAO.getReservationsNumber();
 		
@@ -218,14 +218,15 @@ public class ReservationResource {
 		DataTableResult dataResult = new DataTableResult();
 		List<Reservation> reservations = reservationDAO.getAllReserved(GLOBAL_SEARCH_TERM, colName, dir, INITIAL,
 				RECORD_SIZE);
-		dataResult.setAaData(reservations);
-		dataResult.setiTotalRecords(totalRecords);
-		dataResult.setiTotalDisplayRecords(reservations.size());
+		dataResult.setDraw(draw);
+		dataResult.setData(reservations);
+		dataResult.setRecordsTotal(totalRecords);
+		dataResult.setRecordsFiltered(reservations.size());
 		
 		LOGGER.info(String.valueOf(totalRecords));
-		LOGGER.info(reservations.toString());
+		LOGGER.info(String.valueOf(reservations.size()));
 
-		return Response.ok(reservations).build();
+		return Response.ok(dataResult).build();
 	}
 
 }

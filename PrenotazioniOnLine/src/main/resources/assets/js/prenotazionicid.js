@@ -1,58 +1,77 @@
-$(document).ready(
-		function() {
+$(document).ready(function() {
 
-			$("#prenotazioneModale").validator().on("submit", function(event) {
-				if (event.isDefaultPrevented()) {
-					// handle the invalid form...
-					formError();
-					submitMSG(false, "Did you fill in the form properly?");
-				} else {
-					// everything looks good!
-					event.preventDefault();
-					submitForm();
-				}
-			});
+	$("#prenotazioneModale").validator().on("submit", function(event) {
+		if (event.isDefaultPrevented()) {
+			// handle the invalid form...
+			formError();
+			submitMSG(false, "Did you fill in the form properly?");
+		} else {
+			// everything looks good!
+			event.preventDefault();
+			submitForm();
+		}
+	});
 
-			$("#SelezioneUfficio").on('change', function() {
-				var selected = []
-				selected = $('#SelezioneUfficio').val()
-				var moment = $('#calendar').fullCalendar('getDate');
-				$('#calendar').fullCalendar('removeEventSources');
-				$('#calendar').fullCalendar('removeEvents');
-				$('#calendar').fullCalendar('addEventSource', {
-					url : '/disponibilita?place=' + selected,
-					type : 'GET', // Send post data
-					error : function() {
-						alert('There was an error while fetching events.');
-					}
-				});
-
-				$('#calendar').fullCalendar('rerenderEvents');
-
-			});
-
-			$('#calendar').fullCalendar(
-					{
-						header : {
-							left : 'prev,next today',
-							center : 'title',
-							right : 'month,agendaWeek,agendaDay'
-						},
-						editable : true,
-						eventLimit : true, // allow "more" link when too many
-											// events
-						events : [],
-						eventClick : function(calEvent, jsEvent, view) {
-							console.log(calEvent.id);
-							$("#availability")
-									.val(calEvent.id);
-
-							$("#prenotazioneModale").modal('show');
-						},
-
-					});
-
+	$("#SelezioneUfficio").on('change', function() {
+		var selected = []
+		selected = $('#SelezioneUfficio').val()
+		var moment = $('#calendar').fullCalendar('getDate');
+		$('#calendar').fullCalendar('removeEventSources');
+		$('#calendar').fullCalendar('removeEvents');
+		$('#calendar').fullCalendar('addEventSource', {
+			url : '/disponibilita?place=' + selected,
+			type : 'GET', // Send
+			// post
+			// data
+			error : function() {
+				alert('There was an error while fetching events.');
+			}
 		});
+
+		$('#calendar').fullCalendar('rerenderEvents');
+
+	});
+
+	$('#calendar').fullCalendar({
+		header : {
+			left : 'prev,next today',
+			center : 'title',
+			right : 'month,agendaWeek,agendaDay'
+		},
+		editable : true,
+		eventLimit : true, // allow "more" link when too many
+		// events
+		events : [],
+		eventClick : function(calEvent, jsEvent, view) {
+			console.log(calEvent.id);
+			$("#availability").val(calEvent.id);
+
+			$("#prenotazioneModale").modal('show');
+		},
+
+	});
+	
+	
+
+	$('#reservationTable').DataTable({
+		"processing" : true,
+		"serverSide" : true,
+		"ajax" : "/reservation/showReservations",
+		 "columns": [			    
+			    { "data": "id" },
+	            { "data": "name" },
+	            { "data": "surname" },
+	            { "data": "email" },
+	            { "data": "address" },
+	            { "data": "bornDate" },
+	            { "data": "phone" },
+	            { "data": "reservationDate" },
+	            { "data": "fKavailability" },
+	            { "data": "note" }
+			  ]
+	});
+
+});
 
 function submitForm() {
 	$("#prenotazioneModale").modal('hide');
@@ -64,9 +83,7 @@ function submitForm() {
 	var data = new FormData(form);
 	// Display the key/value pairs
 
-
-	data.append("reservationdate", moment().format() );
-	
+	data.append("reservationdate", moment().format());
 
 	$.ajax({
 		type : "POST",
@@ -78,11 +95,10 @@ function submitForm() {
 		cache : false,
 		timeout : 600000,
 		success : function(text) {
-			
-				formSuccess(text);
-			
-			}
-		,
+
+			formSuccess(text);
+
+		},
 		error : function(XMLHttpRequest, textStatus, errorThrown) {
 			alert("Status: " + textStatus);
 			alert("Error: " + errorThrown);
@@ -93,9 +109,8 @@ function submitForm() {
 function formSuccess(text) {
 
 	$('#schedaprenotazione')[0].reset();
-	
 
-	submitMSG(true, "Prenotazione Confermata! <br/> N.Prenotazione "+text);
+	submitMSG(true, "Prenotazione Confermata! <br/> N.Prenotazione " + text);
 }
 
 function formError(text) {

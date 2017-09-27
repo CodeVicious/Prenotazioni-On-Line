@@ -10,10 +10,16 @@
 <link href='/assets/calendar/fullcalendar.css' rel='stylesheet' />
 <link href='/assets/calendar/fullcalendar.print.css' rel='stylesheet'
 	media='print' />
+<link
+	href='https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css'>
 <link href='/assets/css/prenotazionicid.css' rel='stylesheet' />
 <script src="/assets/calendar/lib/jquery.min.js"></script>
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script
+	src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script
+	src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"></script>
 <script
 	src="	https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.9/validator.js">
 	
@@ -21,6 +27,7 @@
 
 <script src='/assets/calendar/lib/moment.min.js'></script>
 <script src='/assets/calendar/fullcalendar.js'></script>
+
 <script src='/assets/js/prenotazionicid.js'></script>
 
 </head>
@@ -36,12 +43,43 @@
 
 	<div class="container">
 		<h1>Pannello Amministrativo</h1>
-		<h2>Sistema di Prenotazione appuntamenti per la Carta di Identità - San Miniato</h2>
+		<h2>Sistema di Prenotazione appuntamenti per la Carta di Identità
+			- San Miniato</h2>
 
 		<p>Elenco prossime prenotazioni attive</p>
 
+		<table id="reservationTable" class="display" cellspacing="0"
+			width="100%">
+			<thead>
+				<tr>
+					<th>N. Prenotazione</th>
+					<th>Nome</th>
+					<th>Cognome</th>
+					<th>E-mail</th>
+					<th>Indirizzo</th>
+					<th>Data di Nascita</th>
+					<th>Telefono</th>
+					<th>Data prenotazione</th>
+					<th>Prenotazione</th>
+					<th>Note</th>
+				</tr>
+			</thead>
+			<tfoot>
+				<tr>
+					<th>N. Prenotazione</th>
+					<th>Nome</th>
+					<th>Cognome</th>
+					<th>E-mail</th>
+					<th>Indirizzo</th>
+					<th>Data di Nascita</th>
+					<th>Telefono</th>
+					<th>Data prenotazione</th>
+					<th>Prenotazione</th>
+					<th>Note</th>
+				</tr>
+			</tfoot>
+		</table>
 	</div>
-	<div id='calendar'></div>
 </body>
 
 </html>

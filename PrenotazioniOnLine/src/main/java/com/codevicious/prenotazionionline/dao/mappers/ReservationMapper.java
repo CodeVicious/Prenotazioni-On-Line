@@ -16,10 +16,11 @@ public class ReservationMapper implements ResultSetMapper<Reservation> {
 
 		DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
 		DateTimeFormatter fmt2 = DateTimeFormat.forPattern("yyyy-MM-dd");
-
-		return new Reservation(r.getLong("id"), fmt2.parseDateTime(r.getString("reservationdate")), r.getString("name"),
-				r.getString("surname"), r.getString("address"), r.getString("email"), fmt.parseDateTime(r.getString("borndate")), r.getString("phone"),
-				r.getString("note"), r.getLong("fkavailability"));
+		
+		
+		return new Reservation(r.getLong("id"), fmt.parseDateTime(r.getString("reservationdate")), r.getString("name"),
+				r.getString("surname"), r.getString("address"), r.getString("email"), fmt2.parseDateTime(r.getString("borndate")), r.getString("phone"),
+				r.getString("notes"), r.getLong("fkavailability"));
 
 		// Availability(r.getInt("ID"), fmt.parseDateTime(r.getString("Data")),
 		// r.getInt("FKplaces"), r.getBoolean("reserved"),
