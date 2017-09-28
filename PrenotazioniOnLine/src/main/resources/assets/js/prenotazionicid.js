@@ -56,6 +56,7 @@ $(document).ready(function() {
 	$('#reservationTable').DataTable({
 		"processing" : true,
 		"serverSide" : true,
+		"ordering": true,
 		"ajax" : "/reservation/showReservations",
 		 "columns": [			    
 			    { "data": "id" },

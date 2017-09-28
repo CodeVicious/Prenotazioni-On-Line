@@ -15,8 +15,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
@@ -167,20 +170,36 @@ public class ReservationResource {
 	@GET
 	@Path("/showReservations")
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public Response getAllReserved(@QueryParam("draw") long draw, @QueryParam("start") String pageNo,
-			@QueryParam("length") String pageSize, @QueryParam("iSortCol_0") String colIndex,
-			@QueryParam("sSortDir_0") String sortDirection, @QueryParam("search[value]") String GLOBAL_SEARCH_TERM) {
+	public Response getAllReserved(@Context UriInfo ui)
+
+	/*
+	 * @QueryParam("draw") long draw, @QueryParam("start") String pageNo,
+	 * 
+	 * @QueryParam("length") String pageSize, @QueryParam("columns") List<String>
+	 * colIndex,
+	 * 
+	 * @QueryParam("sSortDir_0") String sortDirection, @QueryParam("search[value]")
+	 * String GlobalSearch)
+	 */ {
 
 		// retrieve All the reserved places
 		// ...
 
+		MultivaluedMap<String, String> queryParams = ui.getQueryParameters();
+
+		long draw = Long.valueOf(queryParams.get("draw").get(0)).longValue();
+		String pageNo = queryParams.get("start").get(0);
+		String pageSize = queryParams.get("length").get(0);
+		String GlobalSearch = queryParams.get("search[value]").get(0);
+		String sortDirection = "asc";
+
 		String[] columnNames = { "id", "name", "surname", "email", "address", "borndate", "phone", "reservationdate",
-				"notes" };
+				"fKavailability", "note" };
 
 		int listDisplayAmount = 10;
 		long start = 0;
 		int column = 0;
-		String dir = "asc";
+		String direction = "asc";
 
 		if (pageNo != null) {
 			start = Integer.parseInt(pageNo);
@@ -194,37 +213,29 @@ public class ReservationResource {
 				listDisplayAmount = 10;
 			}
 		}
-		if (colIndex != null) {
-			column = Integer.parseInt(colIndex);
-			if (column < 0 || column > 8)
-				column = 0;
-		}
+
 		if (sortDirection != null) {
 			if (!sortDirection.equals("asc"))
-				dir = "desc";
+				direction = "desc";
 		}
-		if(GLOBAL_SEARCH_TERM == null)
-			GLOBAL_SEARCH_TERM = "";
+		if (GlobalSearch == null)
+			GlobalSearch = "";
 
-		long totalRecords = reservationDAO.getReservationsNumber();
-		
-		
+		if (queryParams.containsKey("order[0][column]")) {
+			column = Integer.valueOf(queryParams.get("order[0][column]").get(0)).intValue();
+			direction = queryParams.get("order[0][dir]").get(0);
 
-		long RECORD_SIZE = listDisplayAmount;
-
-		String colName = columnNames[column];		
-		long INITIAL = start;
+		}
+		String columnName = columnNames[column];
+		long initial = start;
 
 		DataTableResult dataResult = new DataTableResult();
-		List<Reservation> reservations = reservationDAO.getAllReserved(GLOBAL_SEARCH_TERM, colName, dir, INITIAL,
-				RECORD_SIZE);
+		List<Reservation> reservations = reservationDAO.getAllReservedPaginated(GlobalSearch, columnName, direction,
+				initial, listDisplayAmount);
 		dataResult.setDraw(draw);
 		dataResult.setData(reservations);
-		dataResult.setRecordsTotal(totalRecords);
-		dataResult.setRecordsFiltered(reservations.size());
-		
-		LOGGER.info(String.valueOf(totalRecords));
-		LOGGER.info(String.valueOf(reservations.size()));
+		dataResult.setRecordsTotal(reservationDAO.getReservationsNumber());
+		dataResult.setRecordsFiltered(reservationDAO.getReservedFilteredNumber(GlobalSearch, columnName, direction));
 
 		return Response.ok(dataResult).build();
 	}

@@ -8,8 +8,8 @@ database:
 smtpparams:
   host: smtp.gmail.com
   port: 587
-  username: gcodevico@comune.san-miniato.pi.it
-  pw: NuovaVita17
+  username: no-reply@comune.san-miniato.pi.it
+  pw: NoReply@2017
   
   # Logging settings.
 logging:
