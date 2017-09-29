@@ -31,7 +31,7 @@ import io.dropwizard.views.ViewBundle;
  *
  */
 public class PrenotazioniOnLineApplication extends Application<PrenotazioniOnLineConfiguration> {
-
+	
 	private static final Logger LOGGER = LoggerFactory.getLogger(PrenotazioniOnLineApplication.class);
 
 	public static void main(String[] args) throws Exception {

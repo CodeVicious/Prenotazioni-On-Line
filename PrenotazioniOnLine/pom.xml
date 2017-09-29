@@ -11,6 +11,7 @@
 		<dropwizard.version>1.1.4</dropwizard.version>
 		<mysql.version>6.0.6</mysql.version>
 		<commons.email.version>1.5</commons.email.version>
+		<org.antlr.stringtemplate.version>3.2.1</org.antlr.stringtemplate.version>
 	</properties>
 
 	<dependencies>
@@ -65,7 +66,11 @@
 			<artifactId>commons-email</artifactId>
 			<version>${commons.email.version}</version>
 		</dependency>
-
+		<dependency>
+			<groupId>org.antlr</groupId>
+			<artifactId>stringtemplate</artifactId>
+			<version>${org.antlr.stringtemplate.version}</version>
+		</dependency>
 	</dependencies>
 
 	<build>

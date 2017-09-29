@@ -7,13 +7,15 @@ import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.GetGeneratedKeys;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
+import org.skife.jdbi.v2.sqlobject.customizers.Define;
 import org.skife.jdbi.v2.sqlobject.customizers.Mapper;
+import org.skife.jdbi.v2.sqlobject.stringtemplate.UseStringTemplate3StatementLocator;
 
 import com.codevicious.prenotazionionline.dao.mappers.ReservationMapper;
 import com.codevicious.prenotazionionline.helper.PrenotazioniOnlineStatics;
 import com.codevicious.prenotazionionline.representations.Reservation;
 
-
+@UseStringTemplate3StatementLocator
 public interface ReservationDAO {
 
 	@Mapper(ReservationMapper.class)
@@ -27,7 +29,7 @@ public interface ReservationDAO {
 	@Mapper(ReservationMapper.class)
 	@SqlQuery(PrenotazioniOnlineStatics.ALL_RESERVATIONS_TABLEFILTER_PAGINATED)
 	List<Reservation> getAllReservedPaginated(@Bind("GlobalSearch") String GlobalSearch,
-			@Bind("columnName") String columnName, @Bind("direction") String direction, @Bind("initial") long initial,
+			@Define("columnName") String columnName, @Define("direction") String direction, @Bind("initial") long initial,
 			@Bind("recordSize") long recordSize);
 
 	@SqlQuery(PrenotazioniOnlineStatics.COUNT_RESERVATIONS_FILTERED)

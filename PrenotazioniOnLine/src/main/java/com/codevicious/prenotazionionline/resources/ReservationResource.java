@@ -14,7 +14,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
@@ -170,17 +169,7 @@ public class ReservationResource {
 	@GET
 	@Path("/showReservations")
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public Response getAllReserved(@Context UriInfo ui)
-
-	/*
-	 * @QueryParam("draw") long draw, @QueryParam("start") String pageNo,
-	 * 
-	 * @QueryParam("length") String pageSize, @QueryParam("columns") List<String>
-	 * colIndex,
-	 * 
-	 * @QueryParam("sSortDir_0") String sortDirection, @QueryParam("search[value]")
-	 * String GlobalSearch)
-	 */ {
+	public Response getAllReserved(@Context UriInfo ui) {
 
 		// retrieve All the reserved places
 		// ...
@@ -194,7 +183,7 @@ public class ReservationResource {
 		String sortDirection = "asc";
 
 		String[] columnNames = { "id", "name", "surname", "email", "address", "borndate", "phone", "reservationdate",
-				"fKavailability", "note" };
+				"fKavailability", "notes" };
 
 		int listDisplayAmount = 10;
 		long start = 0;

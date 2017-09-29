@@ -1,9 +1,8 @@
 package com.codevicious.prenotazionionline.representations;
 
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
+
+import com.codevicious.prenotazionionline.helper.PrenotazioniOnlineStatics;
 
 public class Reservation {
 
@@ -41,8 +40,7 @@ public class Reservation {
 	}
 
 	public String getReservationDate() {
-		DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
-		return fmt.print(reservationDate);
+		return PrenotazioniOnlineStatics.fullItalianDateFormat.print(reservationDate);
 	}
 
 	public String getName() {
@@ -63,9 +61,7 @@ public class Reservation {
 
 
 	public String getBornDate() {		
-		DateTimeFormatter fmt2 = DateTimeFormat.forPattern("yyyy-MM-dd");
-
-		return fmt2.print(bornDate);
+		return PrenotazioniOnlineStatics.shortDateFormatddMMyyyy.print(bornDate);
 	}
 
 	public String getPhone() {
