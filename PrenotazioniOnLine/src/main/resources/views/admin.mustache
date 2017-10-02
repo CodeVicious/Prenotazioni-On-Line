@@ -7,21 +7,29 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<link href='/assets/calendar/fullcalendar.css' rel='stylesheet' />
-<link href='/assets/calendar/fullcalendar.print.css' rel='stylesheet'
+<link href='/calendar/fullcalendar.css' rel='stylesheet' />
+<link href='/calendar/fullcalendar.print.css' rel='stylesheet'
 	media='print' />
-<link href='/assets/css/prenotazionicid.css' rel='stylesheet' />
-<script src="/assets/calendar/lib/jquery.min.js"></script>
+<link
+	href='https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css'>
+<link href='/css/prenotazionicid.css' rel='stylesheet' />
+<script src="/calendar/lib/jquery.min.js"></script>
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script
+	src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script
+	src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"></script>
 <script
 	src="	https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.9/validator.js">
 	
 </script>
 
-<script src='/assets/calendar/lib/moment.min.js'></script>
-<script src='/assets/calendar/fullcalendar.js'></script>
-<script src='/assets/js/prenotazionicid.js'></script>
+<script src='/calendar/lib/moment.min.js'></script>
+<script src='/calendar/fullcalendar.js'></script>
+
+
+<script src='/js/prenotazionicid.js'></script>
 
 </head>
 
@@ -34,14 +42,30 @@
 
 
 
-	<div class="container">
+	<div class="container-full">
 		<h1>Pannello Amministrativo</h1>
-		<h2>Sistema di Prenotazione appuntamenti per la Carta di Identità - San Miniato</h2>
+		<h2>Sistema di Prenotazione appuntamenti per la Carta di Identità
+			- San Miniato</h2>
 
 		<p>Elenco prossime prenotazioni attive</p>
 
+		<table id="reservationTable" class="table table-striped table-bordered" cellspacing="0" width="100%">
+			<thead>
+				<tr>
+					<th>N. Prenotazione</th>
+					<th>Nome</th>
+					<th>Cognome</th>
+					<th>E-mail</th>
+					<th>Indirizzo</th>
+					<th>Data di Nascita</th>
+					<th>Telefono</th>
+					<th>Prenotazione effettuata il</th>
+					<th>DATA PRENOTAZIONE</th>
+					<th>Note</th>
+				</tr>
+			</thead>
+		</table>
 	</div>
-	<div id='calendar'></div>
 </body>
 
 </html>

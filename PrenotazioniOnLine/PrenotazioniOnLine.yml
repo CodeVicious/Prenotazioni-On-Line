@@ -1,15 +1,24 @@
 
 database:
   driverClass: com.mysql.cj.jdbc.Driver
-  user: prenotazioniDbUser
+  user: prenotazioniDbUs
   password: root
   url: jdbc:mysql://localhost:3306/prenotazionicid?useLegacyDatetimeCode=false&serverTimezone=UTC
   
 smtpparams:
   host: smtp.gmail.com
   port: 587
-  username: gcodevico@comune.san-miniato.pi.it
-  pw: NuovaVita17
+  username: no-reply@comune.san-miniato.pi.it
+  pw: NoReply@2017
+  
+  # Logging settings.
+logging:
+  # The default level of all loggers. Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, or ALL.
+  level: INFO
+   # Logger-specific levels.
+  loggers:
+      # Overrides the levels of certain packages or files.
+      "org.skife.jdbi.v2": TRACE 
   
 
   

@@ -2,6 +2,8 @@ package com.codevicious.prenotazionionline.representations;
 
 import org.joda.time.DateTime;
 
+import com.codevicious.prenotazionionline.helper.PrenotazioniOnlineStatics;
+
 public class Reservation {
 
 	private long id;
@@ -37,8 +39,8 @@ public class Reservation {
 		return id;
 	}
 
-	public DateTime getReservationDate() {
-		return reservationDate;
+	public String getReservationDate() {
+		return PrenotazioniOnlineStatics.fullItalianDateFormat.print(reservationDate);
 	}
 
 	public String getName() {
@@ -58,8 +60,8 @@ public class Reservation {
 	}
 
 
-	public DateTime getBornDate() {
-		return bornDate;
+	public String getBornDate() {		
+		return PrenotazioniOnlineStatics.shortDateFormatddMMyyyy.print(bornDate);
 	}
 
 	public String getPhone() {

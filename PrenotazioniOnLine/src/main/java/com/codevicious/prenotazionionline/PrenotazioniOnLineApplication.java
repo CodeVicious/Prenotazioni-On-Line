@@ -31,7 +31,7 @@ import io.dropwizard.views.ViewBundle;
  *
  */
 public class PrenotazioniOnLineApplication extends Application<PrenotazioniOnLineConfiguration> {
-
+	
 	private static final Logger LOGGER = LoggerFactory.getLogger(PrenotazioniOnLineApplication.class);
 
 	public static void main(String[] args) throws Exception {
@@ -46,7 +46,7 @@ public class PrenotazioniOnLineApplication extends Application<PrenotazioniOnLin
 	public void initialize(Bootstrap<PrenotazioniOnLineConfiguration> bootstrap) {
 		bootstrap.addBundle(new ViewBundle<PrenotazioniOnLineConfiguration>());
 		bootstrap.addBundle(new MultiPartBundle());
-		bootstrap.addBundle(new AssetsBundle());
+		bootstrap.addBundle(new AssetsBundle("/assets","/","index.html"));
 
 	}
 
@@ -65,6 +65,7 @@ public class PrenotazioniOnLineApplication extends Application<PrenotazioniOnLin
 		environment.getApplicationContext().setErrorHandler(epeh);
 		environment.getAdminContext().setErrorHandler(epeh);
 
+		environment.jersey().setUrlPattern("/api/*");
 		ErrorResource errorResource = new ErrorResource();
 		environment.jersey().register(errorResource);
 

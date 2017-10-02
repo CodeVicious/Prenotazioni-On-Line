@@ -1,58 +1,103 @@
-$(document).ready(
-		function() {
+$(document).ready(function() {
 
-			$("#prenotazioneModale").validator().on("submit", function(event) {
-				if (event.isDefaultPrevented()) {
-					// handle the invalid form...
-					formError();
-					submitMSG(false, "Did you fill in the form properly?");
-				} else {
-					// everything looks good!
-					event.preventDefault();
-					submitForm();
-				}
-			});
+	$("#prenotazioneModale").validator().on("submit", function(event) {
+		if (event.isDefaultPrevented()) {
+			// handle the invalid form...
+			formError();
+			submitMSG(false, "Did you fill in the form properly?");
+		} else {
+			// everything looks good!
+			event.preventDefault();
+			submitForm();
+		}
+	});
 
-			$("#SelezioneUfficio").on('change', function() {
-				var selected = []
-				selected = $('#SelezioneUfficio').val()
-				var moment = $('#calendar').fullCalendar('getDate');
-				$('#calendar').fullCalendar('removeEventSources');
-				$('#calendar').fullCalendar('removeEvents');
-				$('#calendar').fullCalendar('addEventSource', {
-					url : '/disponibilita?place=' + selected,
-					type : 'GET', // Send post data
-					error : function() {
-						alert('There was an error while fetching events.');
-					}
-				});
-
-				$('#calendar').fullCalendar('rerenderEvents');
-
-			});
-
-			$('#calendar').fullCalendar(
-					{
-						header : {
-							left : 'prev,next today',
-							center : 'title',
-							right : 'month,agendaWeek,agendaDay'
-						},
-						editable : true,
-						eventLimit : true, // allow "more" link when too many
-											// events
-						events : [],
-						eventClick : function(calEvent, jsEvent, view) {
-							console.log(calEvent.id);
-							$("#availability")
-									.val(calEvent.id);
-
-							$("#prenotazioneModale").modal('show');
-						},
-
-					});
-
+	$("#SelezioneUfficio").on('change', function() {
+		var selected = []
+		selected = $('#SelezioneUfficio').val()
+		var moment = $('#calendar').fullCalendar('getDate');
+		$('#calendar').fullCalendar('removeEventSources');
+		$('#calendar').fullCalendar('removeEvents');
+		$('#calendar').fullCalendar('addEventSource', {
+			url : '/api/disponibilita?place=' + selected,
+			type : 'GET', // Send
+			// post
+			// data
+			error : function() {
+				alert('There was an error while fetching events.');
+			}
 		});
+
+		$('#calendar').fullCalendar('rerenderEvents');
+
+	});
+
+	$('#calendar').fullCalendar({
+		 locale: 'it',
+		header : {
+			left : 'prev,next today',
+			center : 'title',
+			right : 'month,agendaWeek,agendaDay'
+		},
+		editable : true,
+		eventLimit : true, // allow "more" link when too many
+		// events
+		events : [],
+		eventClick : function(calEvent, jsEvent, view) {
+			console.log(calEvent.id);
+			$("#availability").val(calEvent.id);
+
+			$("#prenotazioneModale").modal('show');
+		},
+
+	});
+	
+
+
+
+	$('#reservationTable').DataTable({
+		"language":{
+		    "sEmptyTable":     "Nessun dato presente nella tabella",
+		    "sInfo":           "Vista da _START_ a _END_ di _TOTAL_ elementi",
+		    "sInfoEmpty":      "Vista da 0 a 0 di 0 elementi",
+		    "sInfoFiltered":   "(filtrati da _MAX_ elementi totali)",
+		    "sInfoPostFix":    "",
+		    "sInfoThousands":  ".",
+		    "sLengthMenu":     "Visualizza _MENU_ elementi",
+		    "sLoadingRecords": "Caricamento...",
+		    "sProcessing":     "Elaborazione...",
+		    "sSearch":         "Cerca:",
+		    "sZeroRecords":    "La ricerca non ha portato alcun risultato.",
+		    "oPaginate": {
+		        "sFirst":      "Inizio",
+		        "sPrevious":   "Precedente",
+		        "sNext":       "Successivo",
+		        "sLast":       "Fine"
+		    },
+		    "oAria": {
+		        "sSortAscending":  ": attiva per ordinare la colonna in ordine crescente",
+		        "sSortDescending": ": attiva per ordinare la colonna in ordine decrescente"
+		    }
+		},
+		"processing" : true,
+		"serverSide" : true,
+		"ordering": true,
+		"ajax" : "/api/reservation/showReservations",
+		 "columns": [			    
+			    { "data": "id" },
+	            { "data": "name" },
+	            { "data": "surname" },
+	            { "data": "email" },
+	            { "data": "address" },
+	            { "data": "bornDate" },
+	            { "data": "phone" },
+	            { "data": "reservationDate" },
+	            { "data": "fKavailability" },
+	            { "data": "note" }
+			  ]
+	});
+
+});
 
 function submitForm() {
 	$("#prenotazioneModale").modal('hide');
@@ -64,25 +109,22 @@ function submitForm() {
 	var data = new FormData(form);
 	// Display the key/value pairs
 
-
-	data.append("reservationdate", moment().format() );
-	
+	data.append("reservationdate", moment().format());
 
 	$.ajax({
 		type : "POST",
 		enctype : 'multipart/form-data',
-		url : "/reservation/store",
+		url : "/api/reservation/store",
 		data : data,
 		processData : false,
 		contentType : false,
 		cache : false,
 		timeout : 600000,
 		success : function(text) {
-			
-				formSuccess(text);
-			
-			}
-		,
+
+			formSuccess(text);
+
+		},
 		error : function(XMLHttpRequest, textStatus, errorThrown) {
 			alert("Status: " + textStatus);
 			alert("Error: " + errorThrown);
@@ -93,9 +135,8 @@ function submitForm() {
 function formSuccess(text) {
 
 	$('#schedaprenotazione')[0].reset();
-	
 
-	submitMSG(true, "Prenotazione Confermata! <br/> N.Prenotazione "+text);
+	submitMSG(true, "Prenotazione Confermata! <br/> N.Prenotazione " + text);
 }
 
 function formError(text) {
