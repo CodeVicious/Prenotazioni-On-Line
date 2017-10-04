@@ -2,14 +2,18 @@ package com.codevicious.prenotazionionline;
 
 import javax.ws.rs.client.Client;
 
+import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.servlet.ErrorPageErrorHandler;
 import org.glassfish.jersey.client.JerseyClientBuilder;
+import org.secnod.shiro.jaxrs.ShiroExceptionMapper;
 import org.skife.jdbi.v2.DBI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.codevicious.prenotazionionline.auth.PrenotazioniOnLineAuthenticator;
 import com.codevicious.prenotazionionline.auth.User;
+import com.codevicious.prenotazionionline.bundles.ShiroBundle;
+import com.codevicious.prenotazionionline.bundles.ShiroConfiguration;
 import com.codevicious.prenotazionionline.resources.AvailabilityResource;
 import com.codevicious.prenotazionionline.resources.Dashboard;
 import com.codevicious.prenotazionionline.resources.ErrorResource;
@@ -31,8 +35,14 @@ import io.dropwizard.views.ViewBundle;
  *
  */
 public class PrenotazioniOnLineApplication extends Application<PrenotazioniOnLineConfiguration> {
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(PrenotazioniOnLineApplication.class);
+
+	private final ShiroBundle<PrenotazioniOnLineConfiguration> shiro = new ShiroBundle<PrenotazioniOnLineConfiguration>() {
+		protected ShiroConfiguration narrow(PrenotazioniOnLineConfiguration configuration) {
+			return configuration.shiro;
+		}
+	};
 
 	public static void main(String[] args) throws Exception {
 
@@ -46,7 +56,7 @@ public class PrenotazioniOnLineApplication extends Application<PrenotazioniOnLin
 	public void initialize(Bootstrap<PrenotazioniOnLineConfiguration> bootstrap) {
 		bootstrap.addBundle(new ViewBundle<PrenotazioniOnLineConfiguration>());
 		bootstrap.addBundle(new MultiPartBundle());
-		bootstrap.addBundle(new AssetsBundle("/assets","/","index.html"));
+		bootstrap.addBundle(new AssetsBundle("/assets", "/", "index.html"));
 
 	}
 
@@ -62,7 +72,9 @@ public class PrenotazioniOnLineApplication extends Application<PrenotazioniOnLin
 		epeh.addErrorPage(404, "/error/404");
 		epeh.addErrorPage(405, 499, "/error/general-error");
 		epeh.addErrorPage(500, 599, "/error/general-error");
+		
 		environment.getApplicationContext().setErrorHandler(epeh);
+		environment.getApplicationContext().setSessionHandler(new SessionHandler());
 		environment.getAdminContext().setErrorHandler(epeh);
 
 		environment.jersey().setUrlPattern("/api/*");
@@ -73,12 +85,12 @@ public class PrenotazioniOnLineApplication extends Application<PrenotazioniOnLin
 		final DBI jdbi = factory.build(environment, configuration.getDataSourceFactory(), "mysql");
 		final Client client = new JerseyClientBuilder().build();
 
+		environment.jersey().register(new ShiroExceptionMapper());
 		environment.jersey().register(new Dashboard(client));
 		environment.jersey().register(new AvailabilityResource(jdbi));
 		environment.jersey().register(new ReservationResource(jdbi, configuration));
-		environment.jersey()
-				.register(new AuthDynamicFeature(new BasicCredentialAuthFilter.Builder<User>()
-						.setAuthenticator(new PrenotazioniOnLineAuthenticator(jdbi)).buildAuthFilter()));
+		environment.jersey().register(new AuthDynamicFeature(new BasicCredentialAuthFilter.Builder<User>()
+				.setAuthenticator(new PrenotazioniOnLineAuthenticator(jdbi)).buildAuthFilter()));
 		environment.jersey().register(new AuthValueFactoryProvider.Binder<User>(User.class));
 
 	}

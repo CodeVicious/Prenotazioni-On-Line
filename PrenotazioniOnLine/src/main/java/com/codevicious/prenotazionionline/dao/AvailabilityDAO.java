@@ -40,7 +40,7 @@ public interface AvailabilityDAO {
 
 	@GetGeneratedKeys
 	@SqlUpdate("INSERT INTO availability (ID, Data, FK_places) VALUES (NULL,:Data, :FKplaces)")
-	int createAvailability(@Bind("Data") DateTime Data,  @Bind("FK_places") int FK_places);
+	int createAvailability(@Bind("Data") DateTime Data,  @Bind("FK_places") long FK_places);
 
 	@SqlUpdate("UPDATE availability SET Data=:Data, FKplaces=:FKplaces WHERE ID = :id")
 	void updateAvailability(@Bind("id") int id, @Bind("Data") DateTime Data,

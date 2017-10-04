@@ -53,12 +53,6 @@ public class Dashboard {
 		return new AvailabilityView(avail);
 	}
 
-	@GET
-	@Path("/admin")
-	public AdminView adminReservations() {
-
-		return new AdminView();
-
-	}
+	
 
 }

@@ -1,9 +1,12 @@
 
 database:
   driverClass: com.mysql.cj.jdbc.Driver
-  user: prenotazioniDbUs
+  user: prenotazioniDbUser
   password: root
   url: jdbc:mysql://localhost:3306/prenotazionicid?useLegacyDatetimeCode=false&serverTimezone=UTC
+
+shiro:
+  iniConfigs: ["classpath:shiro.ini"]
   
 smtpparams:
   host: smtp.gmail.com
