@@ -57,6 +57,7 @@ public class PrenotazioniOnLineApplication extends Application<PrenotazioniOnLin
 		bootstrap.addBundle(new ViewBundle<PrenotazioniOnLineConfiguration>());
 		bootstrap.addBundle(new MultiPartBundle());
 		bootstrap.addBundle(new AssetsBundle("/assets", "/", "index.html"));
+		bootstrap.addBundle(shiro);
 
 	}
 
@@ -72,7 +73,7 @@ public class PrenotazioniOnLineApplication extends Application<PrenotazioniOnLin
 		epeh.addErrorPage(404, "/error/404");
 		epeh.addErrorPage(405, 499, "/error/general-error");
 		epeh.addErrorPage(500, 599, "/error/general-error");
-		
+
 		environment.getApplicationContext().setErrorHandler(epeh);
 		environment.getApplicationContext().setSessionHandler(new SessionHandler());
 		environment.getAdminContext().setErrorHandler(epeh);

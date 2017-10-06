@@ -13,16 +13,14 @@ import io.dropwizard.db.DataSourceFactory;
 
 public class PrenotazioniOnLineConfiguration extends Configuration {
 	
-	@Valid
+	@Valid 
 	@NotNull
     private EmailServiceFactory smtpParams = new EmailServiceFactory();
 
 	@JsonProperty
 	private DataSourceFactory database = new DataSourceFactory();
 
-	@JsonProperty
-	protected ShiroConfiguration shiro;
-
+	
 	public DataSourceFactory getDataSourceFactory() {
 		return database;
 	}
@@ -37,6 +35,11 @@ public class PrenotazioniOnLineConfiguration extends Configuration {
 		this.smtpParams = smtpParams;
 	}
 
+	
+	@JsonProperty
+	protected ShiroConfiguration shiro;
+
+	
 	@JsonProperty("shiro")
 	public ShiroConfiguration getShiro() {
 		return shiro;
@@ -46,6 +49,8 @@ public class PrenotazioniOnLineConfiguration extends Configuration {
 	public void setShiro(ShiroConfiguration shiro) {
 		this.shiro = shiro;
 	}
+	
+	
 	
 
 }

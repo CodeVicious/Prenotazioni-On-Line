@@ -14,7 +14,6 @@ import javax.ws.rs.core.Response;
 
 import com.codevicious.prenotazionionline.representations.Availability;
 import com.codevicious.prenotazionionline.representations.Places;
-import com.codevicious.prenotazionionline.views.AdminView;
 import com.codevicious.prenotazionionline.views.AvailabilityView;
 import com.codevicious.prenotazionionline.views.DashboardView;
 

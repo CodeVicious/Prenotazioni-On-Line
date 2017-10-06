@@ -35,7 +35,7 @@ public abstract class ShiroBundle<T> implements ConfiguredBundle<T> {
 		resourceConfig.register(new SubjectFactory());
 		resourceConfig.register(new AuthInjectionBinder());
 
-		Filter shiroFilter = createFilter(configuration);
+		Filter shiroFilter = createFilter(configuration); 
 		environment.servlets().addFilter("ShiroFilter", shiroFilter)
 				.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), false, shiroConfig.filterUrlPattern());
 
@@ -53,7 +53,9 @@ public abstract class ShiroBundle<T> implements ConfiguredBundle<T> {
 				Collection<Realm> realms = createRealms(configuration);
 				WebSecurityManager securityManager = realms.isEmpty() ? shiroEnv.getWebSecurityManager()
 						: new DefaultWebSecurityManager(realms);
+				
 				setSecurityManager(securityManager);
+				
 				setFilterChainResolver(shiroEnv.getFilterChainResolver());
 			}
 		};

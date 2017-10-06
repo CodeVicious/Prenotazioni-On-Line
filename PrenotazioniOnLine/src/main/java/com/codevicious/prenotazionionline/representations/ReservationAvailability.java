@@ -1,7 +1,5 @@
 package com.codevicious.prenotazionionline.representations;
 
-import com.codevicious.prenotazionionline.helper.PrenotazioniOnlineStatics;
-
 public class ReservationAvailability {
 	private final Reservation reservation;
 	private final Availability availability;
