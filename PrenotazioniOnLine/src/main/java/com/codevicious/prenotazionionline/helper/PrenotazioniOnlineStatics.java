@@ -19,7 +19,7 @@ public class PrenotazioniOnlineStatics {
 
 	public static final String ALL_RESERVATIONS_AVAILABILITY_TABLEFILTER_PAGINATED = "select r.ID, r.name, r.surname, r.email, r.address, r.borndate, r.phone, r.reservationdate, r.notes ,r.fkavailability,"
 			+ "avail.ID, avail.Data, avail.FKplaces, avail.reserved, avail.name, avail.color "
-			+ "from reservations as r LEFT JOIN ( select a.*,p.name,p.color from availability as a INNER JOIN places as p on a.FKplaces = p.ID) as avail "
+			+ "from reservations as r INNER JOIN ( select a.*,p.name,p.color from availability as a INNER JOIN places as p on a.FKplaces = p.ID) as avail "
 			+ "on r.fkavailability = avail.ID where r.ID like  concat('%',:GlobalSearch,'%') OR name like concat('%',:GlobalSearch,'%') "
 			+ "OR surname like concat('%',:GlobalSearch,'%') OR email like concat('%',:GlobalSearch,'%')  "
 			+ "ORDER BY <columnName> <direction> LIMIT :initial , :recordSize";

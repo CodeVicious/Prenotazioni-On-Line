@@ -4,7 +4,6 @@ package com.codevicious.prenotazionionline;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-import com.codevicious.prenotazionionline.bundles.ShiroConfiguration;
 import com.codevicious.prenotazionionline.factories.EmailServiceFactory;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -35,21 +34,7 @@ public class PrenotazioniOnLineConfiguration extends Configuration {
 		this.smtpParams = smtpParams;
 	}
 
-	
-	@JsonProperty
-	protected ShiroConfiguration shiro;
 
-	
-	@JsonProperty("shiro")
-	public ShiroConfiguration getShiro() {
-		return shiro;
-	}
-
-	@JsonProperty("shiro")
-	public void setShiro(ShiroConfiguration shiro) {
-		this.shiro = shiro;
-	}
-	
 	
 	
 

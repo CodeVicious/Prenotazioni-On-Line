@@ -84,35 +84,7 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<dependency>
-			<groupId>org.apache.shiro</groupId>
-			<artifactId>shiro-web</artifactId>
-			<version>${shiro.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.secnod.shiro</groupId>
-			<artifactId>shiro-jersey</artifactId>
-			<version>${shiro-jersey.version}</version>
-			<exclusions>
-				<exclusion>
-					<!-- Provided by Dropwizard -->
-					<groupId>org.glassfish.jersey.core</groupId>
-					<artifactId>jersey-server</artifactId>
-				</exclusion>
-				<exclusion>
-					<!-- Provided by Dropwizard -->
-					<groupId>org.glassfish.jersey.containers</groupId>
-					<artifactId>jersey-container-servlet</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.secnod.shiro</groupId>
-			<artifactId>shiro-jersey</artifactId>
-			<version>${shiro-jersey.version}</version>
-			<type>test-jar</type>
-			<scope>test</scope>
-		</dependency>
+
 
 		<dependency>
 			<groupId>junit</groupId>

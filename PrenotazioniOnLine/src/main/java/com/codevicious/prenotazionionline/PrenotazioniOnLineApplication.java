@@ -5,15 +5,13 @@ import javax.ws.rs.client.Client;
 import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.servlet.ErrorPageErrorHandler;
 import org.glassfish.jersey.client.JerseyClientBuilder;
-import org.secnod.shiro.jaxrs.ShiroExceptionMapper;
 import org.skife.jdbi.v2.DBI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.codevicious.prenotazionionline.auth.PrenotazioniOnLineAuthenticator;
 import com.codevicious.prenotazionionline.auth.User;
-import com.codevicious.prenotazionionline.bundles.ShiroBundle;
-import com.codevicious.prenotazionionline.bundles.ShiroConfiguration;
+import com.codevicious.prenotazionionline.resources.AdminDashboard;
 import com.codevicious.prenotazionionline.resources.AvailabilityResource;
 import com.codevicious.prenotazionionline.resources.Dashboard;
 import com.codevicious.prenotazionionline.resources.ErrorResource;
@@ -38,11 +36,6 @@ public class PrenotazioniOnLineApplication extends Application<PrenotazioniOnLin
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PrenotazioniOnLineApplication.class);
 
-	private final ShiroBundle<PrenotazioniOnLineConfiguration> shiro = new ShiroBundle<PrenotazioniOnLineConfiguration>() {
-		protected ShiroConfiguration narrow(PrenotazioniOnLineConfiguration configuration) {
-			return configuration.shiro;
-		}
-	};
 
 	public static void main(String[] args) throws Exception {
 
@@ -57,7 +50,6 @@ public class PrenotazioniOnLineApplication extends Application<PrenotazioniOnLin
 		bootstrap.addBundle(new ViewBundle<PrenotazioniOnLineConfiguration>());
 		bootstrap.addBundle(new MultiPartBundle());
 		bootstrap.addBundle(new AssetsBundle("/assets", "/", "index.html"));
-		bootstrap.addBundle(shiro);
 
 	}
 
@@ -86,9 +78,9 @@ public class PrenotazioniOnLineApplication extends Application<PrenotazioniOnLin
 		final DBI jdbi = factory.build(environment, configuration.getDataSourceFactory(), "mysql");
 		final Client client = new JerseyClientBuilder().build();
 
-		environment.jersey().register(new ShiroExceptionMapper());
 		environment.jersey().register(new Dashboard(client));
 		environment.jersey().register(new AvailabilityResource(jdbi));
+		environment.jersey().register(new AdminDashboard(client));
 		environment.jersey().register(new ReservationResource(jdbi, configuration));
 		environment.jersey().register(new AuthDynamicFeature(new BasicCredentialAuthFilter.Builder<User>()
 				.setAuthenticator(new PrenotazioniOnLineAuthenticator(jdbi)).buildAuthFilter()));

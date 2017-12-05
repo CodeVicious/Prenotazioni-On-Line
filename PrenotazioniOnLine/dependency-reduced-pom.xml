@@ -107,23 +107,6 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>org.secnod.shiro</groupId>
-      <artifactId>shiro-jersey</artifactId>
-      <version>0.2.0</version>
-      <type>test-jar</type>
-      <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <artifactId>jersey-server</artifactId>
-          <groupId>org.glassfish.jersey.core</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>jersey-container-servlet</artifactId>
-          <groupId>org.glassfish.jersey.containers</groupId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
       <groupId>io.dropwizard</groupId>
       <artifactId>dropwizard-testing</artifactId>
       <version>1.1.4</version>

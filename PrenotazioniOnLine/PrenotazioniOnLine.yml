@@ -1,6 +1,3 @@
-shiro:
-   iniConfigs: ["classpath:com/codevicious/prenotazionionline/bundles/shiro.ini"]
-
 database:
   driverClass: com.mysql.cj.jdbc.Driver
   user: prenotazioniDbUser
