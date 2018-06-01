@@ -13,6 +13,7 @@ import com.codevicious.prenotazionionline.auth.IntranetAuthorizer;
 import com.codevicious.prenotazionionline.auth.IntranetOnLineAuthenticator;
 import com.codevicious.prenotazionionline.representations.User;
 import com.codevicious.prenotazionionline.resources.AdminDashboard;
+import com.codevicious.prenotazionionline.resources.AuthResource;
 import com.codevicious.prenotazionionline.resources.AvailabilityResource;
 import com.codevicious.prenotazionionline.resources.Dashboard;
 import com.codevicious.prenotazionionline.resources.ErrorResource;
@@ -84,14 +85,15 @@ public class PrenotazioniOnLineApplication extends Application<PrenotazioniOnLin
 		environment.jersey().register(new AvailabilityResource(jdbi));
 		environment.jersey().register(new AdminDashboard(client));
 		environment.jersey().register(new ReservationResource(jdbi, configuration));
-		environment.jersey().register(new 
+		environment.jersey().register(new AuthResource(jdbi));
+		/*environment.jersey().register(new 
 				AuthDynamicFeature(new OAuthCredentialAuthFilter.Builder<User>()
 				.setAuthenticator(new IntranetOnLineAuthenticator(jdbi))
 				.setAuthorizer(new IntranetAuthorizer(jdbi))
 				.setPrefix("Bearer")
 				.buildAuthFilter()));
 			
-		environment.jersey().register(new AuthValueFactoryProvider.Binder<User>(User.class));
+		environment.jersey().register(new AuthValueFactoryProvider.Binder<User>(User.class));*/
 
 	}
 }
