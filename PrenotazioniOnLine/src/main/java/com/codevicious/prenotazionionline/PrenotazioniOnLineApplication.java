@@ -9,8 +9,9 @@ import org.skife.jdbi.v2.DBI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.codevicious.prenotazionionline.auth.PrenotazioniOnLineAuthenticator;
-import com.codevicious.prenotazionionline.auth.User;
+import com.codevicious.prenotazionionline.auth.IntranetAuthorizer;
+import com.codevicious.prenotazionionline.auth.IntranetOnLineAuthenticator;
+import com.codevicious.prenotazionionline.representations.User;
 import com.codevicious.prenotazionionline.resources.AdminDashboard;
 import com.codevicious.prenotazionionline.resources.AvailabilityResource;
 import com.codevicious.prenotazionionline.resources.Dashboard;
@@ -22,6 +23,7 @@ import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.auth.AuthDynamicFeature;
 import io.dropwizard.auth.AuthValueFactoryProvider;
 import io.dropwizard.auth.basic.BasicCredentialAuthFilter;
+import io.dropwizard.auth.oauth.OAuthCredentialAuthFilter;
 import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.jdbi.DBIFactory;
 import io.dropwizard.setup.Bootstrap;
@@ -82,8 +84,13 @@ public class PrenotazioniOnLineApplication extends Application<PrenotazioniOnLin
 		environment.jersey().register(new AvailabilityResource(jdbi));
 		environment.jersey().register(new AdminDashboard(client));
 		environment.jersey().register(new ReservationResource(jdbi, configuration));
-		environment.jersey().register(new AuthDynamicFeature(new BasicCredentialAuthFilter.Builder<User>()
-				.setAuthenticator(new PrenotazioniOnLineAuthenticator(jdbi)).buildAuthFilter()));
+		environment.jersey().register(new 
+				AuthDynamicFeature(new OAuthCredentialAuthFilter.Builder<User>()
+				.setAuthenticator(new IntranetOnLineAuthenticator(jdbi))
+				.setAuthorizer(new IntranetAuthorizer(jdbi))
+				.setPrefix("Bearer")
+				.buildAuthFilter()));
+			
 		environment.jersey().register(new AuthValueFactoryProvider.Binder<User>(User.class));
 
 	}

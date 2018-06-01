@@ -19,10 +19,10 @@ import org.skife.jdbi.v2.DBI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.codevicious.prenotazionionline.auth.User;
 import com.codevicious.prenotazionionline.dao.AvailabilityDAO;
 import com.codevicious.prenotazionionline.representations.Availability;
 import com.codevicious.prenotazionionline.representations.Places;
+import com.codevicious.prenotazionionline.representations.User;
 
 import io.dropwizard.auth.Auth;
 

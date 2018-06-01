@@ -51,9 +51,6 @@ $(document).ready(function() {
 		},
 
 	});
-	
-
-
 
 	$('#reservationTable').DataTable({
 		"language":{
@@ -92,11 +89,24 @@ $(document).ready(function() {
 	            { "data": "bornDate" },
 	            { "data": "phone" },
 	            { "data": "reservationDate" },
-	            { "data": "fKavailability" },
+	            { "data": "availabilityDateReserved" },
+	            { "data": "availabilityTimeReserved" },
 	            { "data": "note" }
-			  ]
-	});
+			  ],
+	    "order": [[1,'asc']],
+		"rowGroup": {			
+					startRender: function ( rows, group ) {			             
+		                return $('<tr/>')
+		                    .append( '<td colspan="7">'+group+'</td>' )
+		                    .append( '<td>'+'</td>' )
+		                    .append( '<td/>' )
+		                    .append( '<td>'+'</td>' );
+					},
+		            endRender: null, 
 
+		            dataSrc: "availabilityDateReserved"
+		        }
+	});
 });
 
 function submitForm() {

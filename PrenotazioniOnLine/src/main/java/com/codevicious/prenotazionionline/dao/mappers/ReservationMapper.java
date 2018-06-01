@@ -17,7 +17,10 @@ public class ReservationMapper implements ResultSetMapper<Reservation> {
 				PrenotazioniOnlineStatics.longDateFormatTime.parseDateTime(r.getString("reservationdate")),
 				r.getString("name"), r.getString("surname"), r.getString("address"), r.getString("email"),
 				PrenotazioniOnlineStatics.shortDateFormatyyyyMMdd.parseDateTime(r.getString("borndate")),
-				r.getString("phone"), r.getString("notes"), r.getLong("fkavailability"));
+				r.getString("phone"), r.getString("notes"), r.getLong("fkavailability"),
+				PrenotazioniOnlineStatics.shortDateFormatyyyyMMdd.parseDateTime(r.getString("availabilitydatereserved")),
+				PrenotazioniOnlineStatics.fullTimeFormat.parseDateTime(r.getString("availabilitytimereserved"))
+				);
 
 	}
 

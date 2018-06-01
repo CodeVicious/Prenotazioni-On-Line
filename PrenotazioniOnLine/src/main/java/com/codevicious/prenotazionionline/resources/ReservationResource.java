@@ -183,7 +183,7 @@ public class ReservationResource {
 		String sortDirection = "asc";
 
 		String[] columnNames = { "id", "name", "surname", "email", "address", "borndate", "phone", "reservationdate",
-				"fKavailability", "notes" };
+				"availabilitydatereserved","availabilitytimereserved", "notes" };
 
 		int listDisplayAmount = 10;
 		long start = 0;

@@ -1,4 +1,4 @@
-package com.codevicious.prenotazionionline.auth;
+package com.codevicious.prenotazionionline.helper;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;

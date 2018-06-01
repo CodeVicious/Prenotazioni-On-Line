@@ -16,13 +16,15 @@ public class Reservation {
 	private String phone;
 	private String note;
 	private long fKavailability;
+	private DateTime availabilityDateReserved;
+	private DateTime availabilityTimeReserved; 
 
 	public Reservation() {
 
 	}
 
 	public Reservation(long id, DateTime reservationDate, String name, String surname, String address, String email, DateTime bornDate,
-			String phone, String note, long fKavailability) {
+			String phone, String note, long fKavailability, DateTime availabilityDateReserved,DateTime availabilityTimeReserved) {
 		this.id = id;
 		this.reservationDate = reservationDate;
 		this.name = name;
@@ -33,6 +35,8 @@ public class Reservation {
 		this.phone = phone;
 		this.note = note;
 		this.fKavailability = fKavailability;
+		this.availabilityDateReserved = availabilityDateReserved;
+		this.availabilityTimeReserved = availabilityTimeReserved;
 	}
 
 	public long getId() {
@@ -75,6 +79,14 @@ public class Reservation {
 	public long getfKavailability() {
 		return fKavailability;
 	}
+	
+	public String getAvailabilityDateReserved() {
+		return PrenotazioniOnlineStatics.shortDateFormatddMMyyyy.print(availabilityDateReserved);
+	}
+	
+	public String getAvailabilityTimeReserved() {
+		return PrenotazioniOnlineStatics.fullTimeFormat.print(availabilityTimeReserved);
+	}
 
 	public void setId(long id) {
 		this.id = id;
@@ -115,6 +127,14 @@ public class Reservation {
 
 	public void setfKavailability(long fKavailability) {
 		this.fKavailability = fKavailability;
+	}
+	
+	public void setAvailabilityDateReserved(DateTime availabilityDateReserved) {
+		this.availabilityDateReserved = availabilityDateReserved;
+	}
+	
+	public void setAvailabilityTimeReserved(DateTime availabilityTimeReserved) {
+		this.availabilityTimeReserved = availabilityTimeReserved;
 	}
 
 }
