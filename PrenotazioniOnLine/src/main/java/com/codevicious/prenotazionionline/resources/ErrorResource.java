@@ -18,7 +18,15 @@ public class ErrorResource {
 	@GET
 	@Timed
 	@Produces(MediaType.TEXT_HTML)
-	public Response error() {
+	public Response error404() {
+		return Response.status(404).entity(new ErrorView(404)).build();
+	}
+	
+	@Path("405")
+	@GET
+	@Timed
+	@Produces(MediaType.TEXT_HTML)
+	public Response error405() {
 		return Response.status(404).entity(new ErrorView(404)).build();
 	}
 
