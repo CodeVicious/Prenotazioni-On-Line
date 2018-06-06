@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Dic 05, 2017 alle 17:04
+-- Creato il: Giu 06, 2018 alle 14:49
 -- Versione del server: 10.1.28-MariaDB
 -- Versione PHP: 7.1.11
 
@@ -21,6 +21,27 @@ SET time_zone = "+00:00";
 --
 -- Database: `prenotazionicid`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `auth_tokens`
+--
+
+CREATE TABLE `auth_tokens` (
+  `ID` int(11) NOT NULL,
+  `auth_token` char(40) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `expires` int(10) UNSIGNED NOT NULL,
+  `issued` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf16;
+
+--
+-- Dump dei dati per la tabella `auth_tokens`
+--
+
+INSERT INTO `auth_tokens` (`ID`, `auth_token`, `user_id`, `expires`, `issued`) VALUES
+(8, 'd2VibWFzdGVyMzYwMFtCQDM0NmU4ODYw', 1, 3600, '2018-06-06 09:19:51');
 
 -- --------------------------------------------------------
 
@@ -4456,11 +4477,11 @@ INSERT INTO `availability` (`ID`, `Data`, `FKplaces`, `reserved`) VALUES
 (4411, '2018-01-03 12:30:00', 1, 0),
 (4412, '2018-01-03 12:30:00', 2, 0),
 (4413, '2018-01-04 09:00:00', 1, 0),
-(4414, '2018-01-04 09:00:00', 3, 0),
+(4414, '2018-01-04 09:00:00', 3, 1),
 (4415, '2018-01-04 09:30:00', 1, 0),
 (4416, '2018-01-04 09:30:00', 3, 0),
 (4417, '2018-01-04 10:00:00', 1, 0),
-(4418, '2018-01-04 10:00:00', 3, 0),
+(4418, '2018-01-04 10:00:00', 3, 1),
 (4419, '2018-01-04 10:30:00', 1, 0),
 (4420, '2018-01-04 10:30:00', 3, 0),
 (4421, '2018-01-04 11:00:00', 1, 0),
@@ -8809,6 +8830,30 @@ CREATE TABLE `clients` (
 -- --------------------------------------------------------
 
 --
+-- Struttura della tabella `hierarchical_sectors`
+--
+
+CREATE TABLE `hierarchical_sectors` (
+  `ID` int(11) NOT NULL,
+  `sector` varchar(100) NOT NULL,
+  `description` varchar(100) NOT NULL,
+  `code` varchar(10) NOT NULL,
+  `lft` int(11) NOT NULL,
+  `rgt` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf16;
+
+--
+-- Dump dei dati per la tabella `hierarchical_sectors`
+--
+
+INSERT INTO `hierarchical_sectors` (`ID`, `sector`, `description`, `code`, `lft`, `rgt`) VALUES
+(1, 'ROOT', 'ROOT', 'ROOT', 1, 10),
+(2, 'Sistemi informativi e statistici', 'Settore dei sistemi informativi e statistici', 'S1', 4, 5),
+(3, 'Ragioneria', 'Ragioneria', 'S2', 2, 3);
+
+-- --------------------------------------------------------
+
+--
 -- Struttura della tabella `places`
 --
 
@@ -8856,7 +8901,43 @@ CREATE TABLE `reservations` (
 
 INSERT INTO `reservations` (`ID`, `name`, `surname`, `email`, `address`, `borndate`, `phone`, `fkavailability`, `reservationdate`, `notes`) VALUES
 (1, 'Antonella', 'chesi', 'achesi@comune.san-miniato.pi.it', 'Montopoli in val d\'arno - pisa', '1955-08-11', '3401615191', 3355, '2017-10-03 15:03:28', ''),
-(2, 'Gianni', 'Codevico', 'gianni.codevico@gmail.com', 'Livorno', '1976-12-30', '456465', 3743, '2017-12-01 10:36:34', 'note varie');
+(2, 'Gianni', 'Codevico', 'gianni.codevico@gmail.com', 'Livorno', '1976-12-30', '456465', 3743, '2017-12-01 10:36:34', 'note varie'),
+(3, 'Gianni', 'Codevico', 'gianni.codevico@gmail.com', 'Livorno', '1974-01-01', '2', 4414, '2018-01-03 13:16:06', 's'),
+(4, 'Gianni', 'Li', 'gianni.codevico@gmail.com', 'Pisa', '1974-12-31', 'd', 4418, '2018-01-03 13:16:34', '');
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `roles`
+--
+
+CREATE TABLE `roles` (
+  `ID` int(11) NOT NULL,
+  `role` varchar(40) NOT NULL,
+  `description` varchar(200) NOT NULL,
+  `sigla` varchar(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf16;
+
+--
+-- Dump dei dati per la tabella `roles`
+--
+
+INSERT INTO `roles` (`ID`, `role`, `description`, `sigla`) VALUES
+(1, 'Administrator', 'Full administrator', ''),
+(2, 'Administrator', 'Full administrator', ''),
+(3, 'Servizi informativi e statistici', 'Servizio per la gestione infrastruttura tecnologia informativa e ufficio statistica', 'CED');
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `sectors`
+--
+
+CREATE TABLE `sectors` (
+  `ID` int(11) NOT NULL,
+  `sector` varchar(100) NOT NULL,
+  `description` varchar(200) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf16;
 
 -- --------------------------------------------------------
 
@@ -8865,24 +8946,69 @@ INSERT INTO `reservations` (`ID`, `name`, `surname`, `email`, `address`, `bornda
 --
 
 CREATE TABLE `users` (
+  `ID` int(11) NOT NULL,
   `name` varchar(100) CHARACTER SET latin1 NOT NULL,
   `surname` varchar(100) CHARACTER SET latin1 NOT NULL,
   `username` varchar(50) CHARACTER SET latin1 NOT NULL,
   `email` varchar(100) CHARACTER SET latin1 NOT NULL,
-  `ID` int(11) NOT NULL,
-  `password` varchar(32) CHARACTER SET latin1 NOT NULL
+  `password` varchar(32) CHARACTER SET latin1 NOT NULL,
+  `telephone` varchar(20) NOT NULL,
+  `mobile` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf16;
 
 --
 -- Dump dei dati per la tabella `users`
 --
 
-INSERT INTO `users` (`name`, `surname`, `username`, `email`, `ID`, `password`) VALUES
-('Gianni', 'Codevico', 'webmaster', 'gcodevico@comune.san-miniato.pi.it', 1, '0dadd90999a1ded2bbafdd05e37f0149');
+INSERT INTO `users` (`ID`, `name`, `surname`, `username`, `email`, `password`, `telephone`, `mobile`) VALUES
+(1, 'Gianni', 'Codevico', 'webmaster', 'gcodevico@comune.san-miniato.pi.it', 'codevico', '', '');
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `users_roles_rel`
+--
+
+CREATE TABLE `users_roles_rel` (
+  `user_id` int(11) NOT NULL,
+  `role_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf16;
+
+--
+-- Dump dei dati per la tabella `users_roles_rel`
+--
+
+INSERT INTO `users_roles_rel` (`user_id`, `role_id`) VALUES
+(1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `users_sectors_rel`
+--
+
+CREATE TABLE `users_sectors_rel` (
+  `user_id` int(11) NOT NULL,
+  `sector_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf16;
+
+--
+-- Dump dei dati per la tabella `users_sectors_rel`
+--
+
+INSERT INTO `users_sectors_rel` (`user_id`, `sector_id`) VALUES
+(1, 1);
 
 --
 -- Indici per le tabelle scaricate
 --
+
+--
+-- Indici per le tabelle `auth_tokens`
+--
+ALTER TABLE `auth_tokens`
+  ADD PRIMARY KEY (`ID`),
+  ADD UNIQUE KEY `user_id` (`user_id`);
 
 --
 -- Indici per le tabelle `availability`
@@ -8894,6 +9020,12 @@ ALTER TABLE `availability`
 -- Indici per le tabelle `clients`
 --
 ALTER TABLE `clients`
+  ADD PRIMARY KEY (`ID`);
+
+--
+-- Indici per le tabelle `hierarchical_sectors`
+--
+ALTER TABLE `hierarchical_sectors`
   ADD PRIMARY KEY (`ID`);
 
 --
@@ -8909,14 +9041,44 @@ ALTER TABLE `reservations`
   ADD PRIMARY KEY (`ID`);
 
 --
+-- Indici per le tabelle `roles`
+--
+ALTER TABLE `roles`
+  ADD PRIMARY KEY (`ID`);
+
+--
+-- Indici per le tabelle `sectors`
+--
+ALTER TABLE `sectors`
+  ADD PRIMARY KEY (`ID`);
+
+--
 -- Indici per le tabelle `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`ID`);
 
 --
+-- Indici per le tabelle `users_roles_rel`
+--
+ALTER TABLE `users_roles_rel`
+  ADD PRIMARY KEY (`user_id`,`role_id`);
+
+--
+-- Indici per le tabelle `users_sectors_rel`
+--
+ALTER TABLE `users_sectors_rel`
+  ADD PRIMARY KEY (`user_id`,`sector_id`);
+
+--
 -- AUTO_INCREMENT per le tabelle scaricate
 --
+
+--
+-- AUTO_INCREMENT per la tabella `auth_tokens`
+--
+ALTER TABLE `auth_tokens`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT per la tabella `availability`
@@ -8931,6 +9093,12 @@ ALTER TABLE `clients`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT per la tabella `hierarchical_sectors`
+--
+ALTER TABLE `hierarchical_sectors`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT per la tabella `places`
 --
 ALTER TABLE `places`
@@ -8940,7 +9108,19 @@ ALTER TABLE `places`
 -- AUTO_INCREMENT per la tabella `reservations`
 --
 ALTER TABLE `reservations`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT per la tabella `roles`
+--
+ALTER TABLE `roles`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT per la tabella `sectors`
+--
+ALTER TABLE `sectors`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT per la tabella `users`
