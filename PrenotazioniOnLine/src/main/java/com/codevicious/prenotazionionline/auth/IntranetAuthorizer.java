@@ -14,7 +14,6 @@ public class IntranetAuthorizer implements Authorizer<User> {
 		userDAO = jdbi.onDemand(UserDAO.class);
 	}
 
-	@Override
 	public boolean authorize(User arg0, String arg1) {
 		// TODO Auto-generated method stub
 		return false;

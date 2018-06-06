@@ -14,7 +14,16 @@ public class ErrorResource {
 	public ErrorResource() {
 	}
 
-	@Path("404")
+	@Path("/401")
+	@GET
+	@Timed
+	@Produces(MediaType.TEXT_HTML)
+	public Response error401() {
+		return Response.status(401).entity(new ErrorView(401)).build();
+	}
+	
+		
+	@Path("/404")
 	@GET
 	@Timed
 	@Produces(MediaType.TEXT_HTML)
@@ -22,12 +31,12 @@ public class ErrorResource {
 		return Response.status(404).entity(new ErrorView(404)).build();
 	}
 	
-	@Path("405")
+	@Path("/405")
 	@GET
 	@Timed
 	@Produces(MediaType.TEXT_HTML)
 	public Response error405() {
-		return Response.status(404).entity(new ErrorView(404)).build();
+		return Response.status(405).entity(new ErrorView(405)).build();
 	}
 
 }

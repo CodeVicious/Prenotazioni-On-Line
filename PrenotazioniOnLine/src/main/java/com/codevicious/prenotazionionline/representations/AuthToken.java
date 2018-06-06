@@ -1,15 +1,13 @@
 package com.codevicious.prenotazionionline.representations;
 
-import java.sql.Timestamp;
-
 public class AuthToken {
 
 	long id;
 	String auth_token;
 	long user_id;
-	Timestamp expires;
+	int expires;
 
-	public AuthToken(long id, String auth_token, long user_id, Timestamp expires) {
+	public AuthToken(long id, String auth_token, long user_id, int expires) {
 		this.id = id;
 		this.auth_token = auth_token;
 		this.user_id = user_id;
@@ -28,7 +26,7 @@ public class AuthToken {
 		return user_id;
 	}
 
-	public Timestamp getExpires() {
+	public int getExpires() {
 		return expires;
 	}
 
@@ -44,7 +42,7 @@ public class AuthToken {
 		this.user_id = user_id;
 	}
 
-	public void setExpires(Timestamp expires) {
+	public void setExpires(int expires) {
 		this.expires = expires;
 	}
 
