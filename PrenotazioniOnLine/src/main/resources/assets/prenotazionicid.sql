@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Giu 06, 2018 alle 14:49
+-- Creato il: Giu 08, 2018 alle 14:07
 -- Versione del server: 10.1.28-MariaDB
 -- Versione PHP: 7.1.11
 
@@ -21,6 +21,209 @@ SET time_zone = "+00:00";
 --
 -- Database: `prenotazionicid`
 --
+
+DELIMITER $$
+--
+-- Procedure
+--
+CREATE DEFINER=`root`@`localhost` PROCEDURE `r_return_tree` (IN `pedited` INT)  BEGIN
+-- Mostly for HTML select boxes
+  
+  IF pedited IS NULL THEN
+
+    SELECT n.node_id,
+      CONCAT( REPEAT(' . . ', COUNT(CAST(p.node_id AS CHAR)) - 1), 
+      (SELECT sector FROM hierarchical_sectors WHERE node_id = n.node_id )) AS sector
+    FROM tree_map AS n, tree_map AS p
+    WHERE (n.lft BETWEEN p.lft AND p.rgt)
+    GROUP BY node_id
+    ORDER BY n.lft;
+
+  ELSE
+
+    SELECT n.node_id,
+      CONCAT( REPEAT(' . . ', COUNT(CAST(p.node_id AS CHAR)) - 1), 
+      (SELECT sector FROM hierarchical_sectors WHERE node_id = n.node_id )) AS sector
+    FROM tree_map AS n, tree_map AS p
+    WHERE (n.lft BETWEEN p.lft AND p.rgt) AND n.node_id != pedited
+    GROUP BY node_id
+    ORDER BY n.lft;
+
+  END IF;
+       
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `r_return_tree_depth` ()  BEGIN
+
+  SELECT node.node_id, (COUNT(parent.node_id) - 1) AS depth,
+ (SELECT sector FROM hierarchical_sectors WHERE node_id = node.node_id ) AS sector
+    FROM tree_map AS node, tree_map AS parent
+   WHERE node.lft BETWEEN parent.lft AND parent.rgt
+   GROUP BY node.node_id
+   ORDER BY node.lft;
+
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `r_tree_traversal` (IN `ptask_type` VARCHAR(10), IN `pnode_id` INT, IN `pparent_id` INT)  BEGIN
+
+/*The MIT License (MIT)
+
+Copyright (c) 2015 Tomas Stryja
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+
+  DECLARE new_lft, new_rgt, width, has_leafs, superior, superior_parent, old_lft, old_rgt, parent_rgt, subtree_size SMALLINT;
+
+  CASE ptask_type
+
+    WHEN 'insert' THEN
+
+        SELECT rgt INTO new_lft FROM tree_map WHERE node_id = pparent_id;
+        UPDATE tree_map SET rgt = rgt + 2 WHERE rgt >= new_lft;
+        UPDATE tree_map SET lft = lft + 2 WHERE lft > new_lft;
+        INSERT INTO tree_map (lft, rgt, parent_id) VALUES (new_lft, (new_lft + 1), pparent_id);
+    SELECT LAST_INSERT_ID();
+
+    WHEN 'delete' THEN
+
+        SELECT lft, rgt, (rgt - lft), (rgt - lft + 1), parent_id 
+      INTO new_lft, new_rgt, has_leafs, width, superior_parent 
+      FROM tree_map WHERE node_id = pnode_id;
+
+    DELETE FROM hierarchical_sectors WHERE node_id = pnode_id;
+
+        IF (has_leafs = 1) THEN
+          DELETE FROM tree_map WHERE lft BETWEEN new_lft AND new_rgt;
+          UPDATE tree_map SET rgt = rgt - width WHERE rgt > new_rgt;
+          UPDATE tree_map SET lft = lft - width WHERE lft > new_rgt;
+        ELSE
+          DELETE FROM tree_map WHERE lft = new_lft;
+          UPDATE tree_map SET rgt = rgt - 1, lft = lft - 1, parent_id = superior_parent 
+       WHERE lft BETWEEN new_lft AND new_rgt;
+          UPDATE tree_map SET rgt = rgt - 2 WHERE rgt > new_rgt;
+          UPDATE tree_map SET lft = lft - 2 WHERE lft > new_rgt;
+        END IF;
+
+    WHEN 'move' THEN
+    
+    IF (pnode_id != pparent_id) THEN
+        CREATE TEMPORARY TABLE IF NOT EXISTS working_tree_map
+        (
+          `node_id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
+          `lft` smallint(5) unsigned DEFAULT NULL,
+          `rgt` smallint(5) unsigned DEFAULT NULL,
+          `parent_id` smallint(5) unsigned NOT NULL,
+          PRIMARY KEY (`node_id`)
+        );
+        
+    -- put subtree into temporary table
+        INSERT INTO working_tree_map (node_id, lft, rgt, parent_id)
+       SELECT t1.node_id, 
+          (t1.lft - (SELECT MIN(lft) FROM tree_map WHERE node_id = pnode_id)) AS lft,
+          (t1.rgt - (SELECT MIN(lft) FROM tree_map WHERE node_id = pnode_id)) AS rgt,
+          t1.parent_id
+         FROM tree_map AS t1, tree_map AS t2
+        WHERE t1.lft BETWEEN t2.lft AND t2.rgt 
+        AND t2.node_id = pnode_id;
+
+        DELETE FROM tree_map WHERE node_id IN (SELECT node_id FROM working_tree_map);
+
+        SELECT rgt INTO parent_rgt FROM tree_map WHERE node_id = pparent_id;
+        SET subtree_size = (SELECT (MAX(rgt) + 1) FROM working_tree_map);
+    
+    -- make a gap in the tree
+        UPDATE tree_map
+          SET lft = (CASE WHEN lft > parent_rgt THEN lft + subtree_size ELSE lft END),
+              rgt = (CASE WHEN rgt >= parent_rgt THEN rgt + subtree_size ELSE rgt END)
+        WHERE rgt >= parent_rgt;
+
+        INSERT INTO tree_map (node_id, lft, rgt, parent_id)
+             SELECT node_id, lft + parent_rgt, rgt + parent_rgt, parent_id
+               FROM working_tree_map;
+        
+    -- close gaps in tree
+        UPDATE tree_map
+           SET lft = (SELECT COUNT(*) FROM vw_lftrgt AS v WHERE v.lft <= tree_map.lft),
+               rgt = (SELECT COUNT(*) FROM vw_lftrgt AS v WHERE v.lft <= tree_map.rgt);
+        
+        DELETE FROM working_tree_map;
+        UPDATE tree_map SET parent_id = pparent_id WHERE node_id = pnode_id;
+    END IF;
+
+    WHEN 'order' THEN
+
+        SELECT lft, rgt, (rgt - lft + 1), parent_id INTO old_lft, old_rgt, width, superior
+          FROM tree_map WHERE node_id = pnode_id;
+
+        -- is parent 
+        SELECT parent_id INTO superior_parent FROM tree_map WHERE node_id = pparent_id;
+
+        IF (superior = superior_parent) THEN
+          SELECT (rgt + 1) INTO new_lft FROM tree_map WHERE node_id = pparent_id;
+        ELSE
+          SELECT (lft + 1) INTO new_lft FROM tree_map WHERE node_id = pparent_id;
+        END IF;
+
+      IF (new_lft != old_lft) THEN
+      CREATE TEMPORARY TABLE IF NOT EXISTS working_tree_map
+        (
+          `node_id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
+          `lft` smallint(5) unsigned DEFAULT NULL,
+          `rgt` smallint(5) unsigned DEFAULT NULL,
+          `parent_id` smallint(5) unsigned NOT NULL,
+          PRIMARY KEY (`node_id`)
+        );
+
+       INSERT INTO working_tree_map (node_id, lft, rgt, parent_id)
+            SELECT t1.node_id,
+             (t1.lft - (SELECT MIN(lft) FROM tree_map WHERE node_id = pnode_id)) AS lft,
+           (t1.rgt - (SELECT MIN(lft) FROM tree_map WHERE node_id = pnode_id)) AS rgt,
+           t1.parent_id
+        FROM tree_map AS t1, tree_map AS t2
+       WHERE t1.lft BETWEEN t2.lft AND t2.rgt AND t2.node_id = pnode_id;
+            
+       DELETE FROM tree_map WHERE node_id IN (SELECT node_id FROM working_tree_map);
+
+       IF(new_lft < old_lft) THEN -- move up
+          UPDATE tree_map SET lft = lft + width WHERE lft >= new_lft AND lft < old_lft;
+          UPDATE tree_map SET rgt = rgt + width WHERE rgt > new_lft AND rgt < old_rgt;
+          UPDATE working_tree_map SET lft = new_lft + lft, rgt = new_lft + rgt;
+       END IF;
+
+       IF(new_lft > old_lft) THEN -- move down
+            UPDATE tree_map SET lft = lft - width WHERE lft > old_lft AND lft < new_lft;
+            UPDATE tree_map SET rgt = rgt - width WHERE rgt > old_rgt AND rgt < new_lft;
+            UPDATE working_tree_map SET lft = (new_lft - width) + lft, rgt = (new_lft - width) + rgt;
+       END IF;
+
+       INSERT INTO tree_map (node_id, lft, rgt, parent_id)
+            SELECT node_id, lft, rgt, parent_id
+              FROM working_tree_map;
+            
+       DELETE FROM working_tree_map;
+     END IF;
+  END CASE;
+
+END$$
+
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -8835,21 +9038,21 @@ CREATE TABLE `clients` (
 
 CREATE TABLE `hierarchical_sectors` (
   `ID` int(11) NOT NULL,
-  `sector` varchar(100) NOT NULL,
-  `description` varchar(100) NOT NULL,
+  `node_id` smallint(5) UNSIGNED NOT NULL,
   `code` varchar(10) NOT NULL,
-  `lft` int(11) NOT NULL,
-  `rgt` int(11) NOT NULL
+  `sector` varchar(100) NOT NULL,
+  `description` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf16;
 
 --
 -- Dump dei dati per la tabella `hierarchical_sectors`
 --
 
-INSERT INTO `hierarchical_sectors` (`ID`, `sector`, `description`, `code`, `lft`, `rgt`) VALUES
-(1, 'ROOT', 'ROOT', 'ROOT', 1, 10),
-(2, 'Sistemi informativi e statistici', 'Settore dei sistemi informativi e statistici', 'S1', 4, 5),
-(3, 'Ragioneria', 'Ragioneria', 'S2', 2, 3);
+INSERT INTO `hierarchical_sectors` (`ID`, `node_id`, `code`, `sector`, `description`) VALUES
+(1, 1, 'ROOT', 'Comune di San Miniato', 'Comune di San Miniato'),
+(2, 2, 'S1', 'AFFARI ISTITUZIONALI E LEGALI', 'AFFARI ISTITUZIONALI E LEGALI'),
+(3, 3, 'AMM', 'AMMINISTRATORI', 'AMMINISTRATORI'),
+(4, 4, 'CED', 'SISTEMI INFORMATIVI - STATISTICA - CED', 'SISTEMI INFORMATIVI - STATISTICA - CED');
 
 -- --------------------------------------------------------
 
@@ -8942,6 +9145,29 @@ CREATE TABLE `sectors` (
 -- --------------------------------------------------------
 
 --
+-- Struttura della tabella `tree_map`
+--
+
+CREATE TABLE `tree_map` (
+  `node_id` smallint(5) UNSIGNED NOT NULL,
+  `lft` smallint(5) UNSIGNED NOT NULL,
+  `rgt` smallint(5) UNSIGNED NOT NULL,
+  `parent_id` smallint(5) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dump dei dati per la tabella `tree_map`
+--
+
+INSERT INTO `tree_map` (`node_id`, `lft`, `rgt`, `parent_id`) VALUES
+(1, 1, 8, 0),
+(2, 2, 5, 1),
+(3, 6, 7, 1),
+(4, 3, 4, 2);
+
+-- --------------------------------------------------------
+
+--
 -- Struttura della tabella `users`
 --
 
@@ -8989,15 +9215,15 @@ INSERT INTO `users_roles_rel` (`user_id`, `role_id`) VALUES
 
 CREATE TABLE `users_sectors_rel` (
   `user_id` int(11) NOT NULL,
-  `sector_id` int(11) NOT NULL
+  `hierarchical_sector_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf16;
 
 --
 -- Dump dei dati per la tabella `users_sectors_rel`
 --
 
-INSERT INTO `users_sectors_rel` (`user_id`, `sector_id`) VALUES
-(1, 1);
+INSERT INTO `users_sectors_rel` (`user_id`, `hierarchical_sector_id`) VALUES
+(1, 4);
 
 --
 -- Indici per le tabelle scaricate
@@ -9053,6 +9279,12 @@ ALTER TABLE `sectors`
   ADD PRIMARY KEY (`ID`);
 
 --
+-- Indici per le tabelle `tree_map`
+--
+ALTER TABLE `tree_map`
+  ADD PRIMARY KEY (`node_id`);
+
+--
 -- Indici per le tabelle `users`
 --
 ALTER TABLE `users`
@@ -9068,7 +9300,7 @@ ALTER TABLE `users_roles_rel`
 -- Indici per le tabelle `users_sectors_rel`
 --
 ALTER TABLE `users_sectors_rel`
-  ADD PRIMARY KEY (`user_id`,`sector_id`);
+  ADD PRIMARY KEY (`user_id`,`hierarchical_sector_id`);
 
 --
 -- AUTO_INCREMENT per le tabelle scaricate
@@ -9096,7 +9328,7 @@ ALTER TABLE `clients`
 -- AUTO_INCREMENT per la tabella `hierarchical_sectors`
 --
 ALTER TABLE `hierarchical_sectors`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT per la tabella `places`
@@ -9121,6 +9353,12 @@ ALTER TABLE `roles`
 --
 ALTER TABLE `sectors`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT per la tabella `tree_map`
+--
+ALTER TABLE `tree_map`
+  MODIFY `node_id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT per la tabella `users`
