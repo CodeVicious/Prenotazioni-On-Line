@@ -48,4 +48,7 @@ public class PrenotazioniOnlineStatics {
 	public static final DateTimeFormatter longDateFormatTime = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
 	
 	public static final DateTimeFormatter fullTimeFormat = DateTimeFormat.forPattern("HH:mm:ss");
+	
+	
+	public static final int DEFAULT_PAGE_DIMENSION = 10;
 }

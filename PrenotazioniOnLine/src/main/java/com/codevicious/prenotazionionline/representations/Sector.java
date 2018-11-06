@@ -3,12 +3,14 @@ package com.codevicious.prenotazionionline.representations;
 public class Sector {
 	
 	long id;
+	String code;
 	String sector;
 	String description;
 	
-	public Sector(long id, String sector, String description) {
+	public Sector(long id, String code, String sector, String description) {
 		this.id = id;
 		this.sector = sector;
+		this.code = code;
 		this.description = description;
 	}
 
@@ -34,6 +36,14 @@ public class Sector {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 }

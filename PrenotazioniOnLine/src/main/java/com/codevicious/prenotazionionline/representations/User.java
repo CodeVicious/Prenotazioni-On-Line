@@ -3,6 +3,8 @@ package com.codevicious.prenotazionionline.representations;
 import java.security.Principal;
 import java.util.List;
 
+import com.google.common.base.Optional;
+
 public class User implements Principal {
 
 
@@ -15,8 +17,8 @@ public class User implements Principal {
 	private String telephon;
 	private String mobile;
 
-	private List<Role> roles;
-	private List<Sector> sectors;
+	private Optional<List<Role>> roles;
+	private Optional<List<Sector>> sectors;
 
 	public User(long id, String name, String surname, String username, String email, String telephon, String mobile,
 			List<Role> roles, List<Sector> sectors) {
@@ -27,8 +29,8 @@ public class User implements Principal {
 		this.email = email;
 		this.telephon = telephon;
 		this.mobile = mobile;
-		this.roles = roles;
-		this.sectors = sectors;
+		this.roles = Optional.of(roles);
+		this.sectors = Optional.of(sectors);
 	}
 
 	public User(long id, String name, String surname, String username, String email, String telephon, String mobile) {
@@ -39,8 +41,8 @@ public class User implements Principal {
 		this.email = email;
 		this.telephon = telephon;
 		this.mobile = mobile;
-		this.roles = null;
-		this.sectors = null;
+		this.roles = Optional.absent();
+		this.sectors = Optional.absent();
 	}
 	
 	public long getId() {
@@ -59,11 +61,11 @@ public class User implements Principal {
 		return username;
 	}
 
-	public List<Role> getRoles() {
+	public Optional<List<Role>> getRoles() {
 		return roles;
 	}
 
-	public List<Sector> getSectors() {
+	public Optional<List<Sector>> getSectors() {
 		return sectors;
 	}
 
@@ -80,11 +82,11 @@ public class User implements Principal {
 	}
 
 	public void setRoles(List<Role> roles) {
-		this.roles = roles;
+		this.roles = Optional.of(roles);
 	}
 
 	public void setSectors(List<Sector> sectors) {
-		this.sectors = sectors;
+		this.sectors = Optional.of(sectors);
 	}
 
 	public void setId(long id) {
