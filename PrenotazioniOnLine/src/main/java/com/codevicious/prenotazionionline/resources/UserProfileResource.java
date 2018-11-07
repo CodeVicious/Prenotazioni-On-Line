@@ -64,7 +64,7 @@ public class UserProfileResource {
 			pageNo = queryParams.get("start").get(0);
 			pageSize = queryParams.get("length").get(0);
 			column = queryParams.get("column").get(0);
-			sortDirection = "asc";
+			sortDirection = queryParams.get("sort").get(0);;
 		}
 
 		int listDisplayAmount = PrenotazioniOnlineStatics.DEFAULT_PAGE_DIMENSION;
