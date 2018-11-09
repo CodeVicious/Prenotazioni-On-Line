@@ -59,12 +59,16 @@ public class UserProfileResource {
 		String column = "surname";
 		String sortDirection = "asc";
 
-		
 		if (!queryParams.isEmpty()) {
-			pageNo = queryParams.get("start").get(0);
-			pageSize = queryParams.get("length").get(0);
-			column = queryParams.get("column").get(0);
-			sortDirection = queryParams.get("sort").get(0);;
+			if (queryParams.containsKey("start"))
+				pageNo = queryParams.get("start").get(0);
+			if (queryParams.containsKey("length"))
+				pageSize = queryParams.get("length").get(0);
+			if (queryParams.containsKey("column"))
+				column = queryParams.get("column").get(0);
+			if (queryParams.containsKey("sort"))
+				sortDirection = queryParams.get("sort").get(0);
+			;
 		}
 
 		int listDisplayAmount = PrenotazioniOnlineStatics.DEFAULT_PAGE_DIMENSION;
@@ -78,12 +82,13 @@ public class UserProfileResource {
 		}
 		if (pageSize != null) {
 			listDisplayAmount = Integer.parseInt(pageSize);
-			if (listDisplayAmount < 10 || listDisplayAmount > 50) {
+			if (listDisplayAmount < 10) {
 				listDisplayAmount = 10;
 			}
 		}
 
-		Optional<List<User>> Users = Optional.ofNullable(userDAO.getUsers(column, sortDirection, start, listDisplayAmount));
+		Optional<List<User>> Users = Optional
+				.ofNullable(userDAO.getUsers(column, sortDirection, start, listDisplayAmount));
 
 		return Response.ok(Users.get()).build();
 

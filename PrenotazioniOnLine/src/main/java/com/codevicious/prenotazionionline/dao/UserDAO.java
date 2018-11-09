@@ -26,7 +26,7 @@ public interface UserDAO {
 	User getUserByID(@Bind("user_id") long user_id);
 
 	@Mapper(UserMapper.class)
-	@SqlQuery("SELECT * FROM users ORDER BY :columnName :direction LIMIT :initial , :recordSize")
+	@SqlQuery("SELECT * FROM users ORDER BY :columnName :direction LIMIT :recordSize OFFSET :initial")
 	List<User> getUsers(@Bind("columnName") String columnName, @Bind("direction") String direction,
 			@Bind("initial") long initial, @Bind("recordSize") long recordSize);
 
