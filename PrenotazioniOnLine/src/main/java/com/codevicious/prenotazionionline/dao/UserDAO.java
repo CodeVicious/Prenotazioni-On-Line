@@ -4,7 +4,10 @@ import java.util.List;
 
 import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
+import org.skife.jdbi.v2.sqlobject.customizers.Define;
 import org.skife.jdbi.v2.sqlobject.customizers.Mapper;
+import org.skife.jdbi.v2.sqlobject.stringtemplate.UseStringTemplate3StatementLocator;
+
 import com.codevicious.prenotazionionline.dao.mappers.RoleMapper;
 import com.codevicious.prenotazionionline.dao.mappers.SectorMapper;
 import com.codevicious.prenotazionionline.dao.mappers.UserMapper;
@@ -12,7 +15,7 @@ import com.codevicious.prenotazionionline.representations.Role;
 import com.codevicious.prenotazionionline.representations.Sector;
 import com.codevicious.prenotazionionline.representations.User;
 
-
+@UseStringTemplate3StatementLocator
 public interface UserDAO {
 
 	@SqlQuery("select count(*) from users where username = :username and password = :password")
@@ -26,8 +29,8 @@ public interface UserDAO {
 	User getUserByID(@Bind("user_id") long user_id);
 
 	@Mapper(UserMapper.class)
-	@SqlQuery("SELECT * FROM users ORDER BY :columnName :direction LIMIT :recordSize OFFSET :initial")
-	List<User> getUsers(@Bind("columnName") String columnName, @Bind("direction") String direction,
+	@SqlQuery("SELECT * FROM users ORDER BY <columnName> <direction> LIMIT :recordSize OFFSET :initial")
+	List<User> getUsers(@Define("columnName") String columnName, @Define("direction") String direction,
 			@Bind("initial") long initial, @Bind("recordSize") long recordSize);
 
 	@Mapper(RoleMapper.class)

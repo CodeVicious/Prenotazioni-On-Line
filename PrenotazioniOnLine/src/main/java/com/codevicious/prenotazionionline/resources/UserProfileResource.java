@@ -21,7 +21,6 @@ import com.codevicious.prenotazionionline.PrenotazioniOnLineConfiguration;
 import com.codevicious.prenotazionionline.dao.AuthTokenDAO;
 import com.codevicious.prenotazionionline.dao.UserDAO;
 import com.codevicious.prenotazionionline.helper.PrenotazioniOnlineStatics;
-
 import com.codevicious.prenotazionionline.representations.User;
 
 import io.dropwizard.auth.Auth;
@@ -68,7 +67,6 @@ public class UserProfileResource {
 				column = queryParams.get("column").get(0);
 			if (queryParams.containsKey("sort"))
 				sortDirection = queryParams.get("sort").get(0);
-			;
 		}
 
 		int listDisplayAmount = PrenotazioniOnlineStatics.DEFAULT_PAGE_DIMENSION;
@@ -87,8 +85,8 @@ public class UserProfileResource {
 			}
 		}
 
-		Optional<List<User>> Users = Optional
-				.ofNullable(userDAO.getUsers(column, sortDirection, start, listDisplayAmount));
+		Optional<List<User>> Users = Optional.ofNullable(userDAO.getUsers(column, sortDirection, start, listDisplayAmount));
+		
 
 		return Response.ok(Users.get()).build();
 
