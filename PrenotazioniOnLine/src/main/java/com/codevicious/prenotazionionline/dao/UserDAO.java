@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
+import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 import org.skife.jdbi.v2.sqlobject.customizers.Define;
 import org.skife.jdbi.v2.sqlobject.customizers.Mapper;
 import org.skife.jdbi.v2.sqlobject.stringtemplate.UseStringTemplate3StatementLocator;
@@ -27,6 +28,10 @@ public interface UserDAO {
 	@Mapper(UserMapper.class)
 	@SqlQuery("select * from users where ID = :user_id")	
 	User getUserByID(@Bind("user_id") long user_id);
+	
+	
+	@SqlUpdate("DELETE from users where ID = :user_id")	
+	void deleteUser(@Bind("user_id") long user_id);
 
 	@Mapper(UserMapper.class)
 	@SqlQuery("SELECT * FROM users ORDER BY <columnName> <direction> LIMIT :recordSize OFFSET :initial")

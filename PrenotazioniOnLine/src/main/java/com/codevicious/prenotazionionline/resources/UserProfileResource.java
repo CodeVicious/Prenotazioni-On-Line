@@ -3,9 +3,10 @@ package com.codevicious.prenotazionionline.resources;
 import java.util.List;
 import java.util.Optional;
 
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -40,12 +41,12 @@ public class UserProfileResource {
 		userDAO = jdbi.onDemand(UserDAO.class);
 	}
 
-	@GET
-	public Response getReservations(@Auth User user) {
-
-		return Response.ok(user).build();
-
-	}
+//	@GET
+//	public Response getReservations(@Auth User user) {
+//
+//		return Response.ok(user).build();
+//
+//	}
 
 	@GET
 	@Path("/All") // retrieve all users paginated
@@ -89,7 +90,16 @@ public class UserProfileResource {
 		
 
 		return Response.ok(Users.get()).build();
+	}
+	
 
+	@DELETE
+	@Path("/delete/{id}")
+	public Response deleteAvailability(@PathParam("id") int id) {
+		// delete the user with the provided id
+		// ...
+		userDAO.deleteUser(id);
+		return Response.ok().build();
 	}
 
 }
