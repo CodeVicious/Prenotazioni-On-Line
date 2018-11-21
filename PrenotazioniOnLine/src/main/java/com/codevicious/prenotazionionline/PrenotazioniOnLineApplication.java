@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import com.codevicious.prenotazionionline.auth.IntranetAuthorizer;
 import com.codevicious.prenotazionionline.auth.IntranetOnLineAuthenticator;
+import com.codevicious.prenotazionionline.dao.mappers.UnrecognizedPropertyExceptionMapper;
 import com.codevicious.prenotazionionline.representations.User;
 import com.codevicious.prenotazionionline.resources.AdminDashboard;
 import com.codevicious.prenotazionionline.resources.AuthResource;
@@ -23,6 +24,7 @@ import com.codevicious.prenotazionionline.resources.AvailabilityResource;
 import com.codevicious.prenotazionionline.resources.Dashboard;
 import com.codevicious.prenotazionionline.resources.ReservationResource;
 import com.codevicious.prenotazionionline.resources.UserProfileResource;
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
@@ -31,6 +33,7 @@ import io.dropwizard.auth.AuthValueFactoryProvider;
 import io.dropwizard.auth.oauth.OAuthCredentialAuthFilter;
 import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.jdbi.DBIFactory;
+import io.dropwizard.jersey.jackson.JsonProcessingExceptionMapper;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.dropwizard.views.ViewBundle;
@@ -82,12 +85,14 @@ public class PrenotazioniOnLineApplication extends Application<PrenotazioniOnLin
 
         // Configure CORS parameters
         cors.setInitParameter(CrossOriginFilter.ALLOWED_ORIGINS_PARAM, "*");
-        cors.setInitParameter(CrossOriginFilter.ALLOWED_HEADERS_PARAM, "X-Requested-With,Content-Type,Accept,Origin,Authorization");
+        cors.setInitParameter(CrossOriginFilter.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*");
+        cors.setInitParameter(CrossOriginFilter.ALLOWED_HEADERS_PARAM, "*");
         cors.setInitParameter(CrossOriginFilter.ALLOWED_METHODS_PARAM, "OPTIONS,GET,PUT,POST,DELETE,HEAD");
         cors.setInitParameter(CrossOriginFilter.ALLOW_CREDENTIALS_PARAM, "true");
 
         // Add URL mapping
         cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
+        cors.setInitParameter(CrossOriginFilter.CHAIN_PREFLIGHT_PARAM, Boolean.FALSE.toString());
 
 		
 		environment.getApplicationContext().setSessionHandler(new SessionHandler());
@@ -104,6 +109,8 @@ public class PrenotazioniOnLineApplication extends Application<PrenotazioniOnLin
 		environment.jersey().register(new ReservationResource(jdbi, configuration));
 		environment.jersey().register(new AuthResource(jdbi));
 		environment.jersey().register(new UserProfileResource(jdbi, configuration));
+		environment.jersey().register(new JsonProcessingExceptionMapper(true));
+		 environment.jersey().register(new UnrecognizedPropertyExceptionMapper());
 
 		environment.jersey().register(new AuthDynamicFeature(new OAuthCredentialAuthFilter.Builder<User>()
 				.setAuthenticator(new IntranetOnLineAuthenticator(jdbi)).setPrefix("Bearer").buildAuthFilter()));

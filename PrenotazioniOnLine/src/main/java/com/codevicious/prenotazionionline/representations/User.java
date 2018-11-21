@@ -7,42 +7,27 @@ import com.google.common.base.Optional;
 
 public class User implements Principal {
 
-
-
 	private long id;
 	private String name;
 	private String surname;
 	private String username;
 	private String email;
-	private String telephon;
+	private String telephone;
 	private String mobile;
+	private String password;
+	
+	public User() {}
 
-	private Optional<List<Role>> roles;
-	private Optional<List<Sector>> sectors;
 
-	public User(long id, String name, String surname, String username, String email, String telephon, String mobile,
-			List<Role> roles, List<Sector> sectors) {
+	public User(long id, String name, String surname, String username, String email, String telephone, String mobile, String password) {
 		this.id = id;
 		this.name = name;
 		this.surname = surname;
 		this.username = username;
 		this.email = email;
-		this.telephon = telephon;
+		this.telephone = telephone;
 		this.mobile = mobile;
-		this.roles = Optional.of(roles);
-		this.sectors = Optional.of(sectors);
-	}
-
-	public User(long id, String name, String surname, String username, String email, String telephon, String mobile) {
-		this.id = id;
-		this.name = name;
-		this.surname = surname;
-		this.username = username;
-		this.email = email;
-		this.telephon = telephon;
-		this.mobile = mobile;
-		this.roles = Optional.absent();
-		this.sectors = Optional.absent();
+		this.password = password;
 	}
 	
 	public long getId() {
@@ -61,13 +46,6 @@ public class User implements Principal {
 		return username;
 	}
 
-	public Optional<List<Role>> getRoles() {
-		return roles;
-	}
-
-	public Optional<List<Sector>> getSectors() {
-		return sectors;
-	}
 
 	public void setName(String name) {
 		this.name = name;
@@ -81,13 +59,6 @@ public class User implements Principal {
 		this.username = username;
 	}
 
-	public void setRoles(List<Role> roles) {
-		this.roles = Optional.of(roles);
-	}
-
-	public void setSectors(List<Sector> sectors) {
-		this.sectors = Optional.of(sectors);
-	}
 
 	public void setId(long id) {
 		this.id = id;
@@ -97,8 +68,8 @@ public class User implements Principal {
 		return email;
 	}
 
-	public String getTelephon() {
-		return telephon;
+	public String getTelephone() {
+		return telephone;
 	}
 
 	public String getMobile() {
@@ -109,12 +80,20 @@ public class User implements Principal {
 		this.email = email;
 	}
 
-	public void setTelephon(String telephon) {
-		this.telephon = telephon;
+	public void setTelephone(String telephone) {
+		this.telephone = telephone;
 	}
 
 	public void setMobile(String mobile) {
 		this.mobile = mobile;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 }

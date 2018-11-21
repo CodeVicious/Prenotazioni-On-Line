@@ -30,8 +30,8 @@ public class IntranetOnLineAuthenticator implements Authenticator<String, User> 
 		if (authTokenUserId.isPresent()) {
 			Optional<User> user = Optional.ofNullable(userDAO.getUserByID(authTokenUserId.get()));
 			if (user.isPresent()) {
-				user.get().setRoles(userDAO.getRolesByUserID(authTokenUserId.get()));
-				user.get().setSectors(userDAO.getSectorsByUserID(authTokenUserId.get()));
+				///user.get().setRoles(userDAO.getRolesByUserID(authTokenUserId.get()));
+				///user.get().setSectors(userDAO.getSectorsByUserID(authTokenUserId.get()));
 				return user;
 			}
 
