@@ -6,6 +6,7 @@ import java.util.Optional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -122,6 +123,21 @@ public class UserProfileResource {
 		long updatedUserID  = userDAO.updateUser(user);
 		
 		return Response.ok(String.valueOf(updatedUserID)).build();
+	}
+	
+	@POST
+	@Path("/add")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response addUser(User newUser) {		
+		
+		LOGGER.debug(newUser.toString());
+		
+		newUser.setPassword(PasswordMD5Converter.getMD5(newUser.getPassword()));
+		
+		long newUserID  = userDAO.insertUser(newUser);
+		
+		return Response.ok(String.valueOf(newUserID)).build();
 	}
 }
 
