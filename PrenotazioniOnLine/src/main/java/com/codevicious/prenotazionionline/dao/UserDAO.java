@@ -52,4 +52,12 @@ public interface UserDAO {
 	@SqlUpdate("INSERT INTO users(name, surname, username, email, password, telephone, mobile) VALUES (:name, :surname, :username, :email, :password, :telephone, mobile) ")
 	long insertUser(@BindBean User user);
 
+	@Mapper(RoleMapper.class)
+	@SqlQuery("SELECT * FROM roles ORDER BY role")	
+	List<Role> getRoles();
+
+	@Mapper(SectorMapper.class)
+	@SqlQuery("SELECT * FROM sectors ")
+	List<Sector> getSectors();
+
 }

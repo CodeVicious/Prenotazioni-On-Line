@@ -46,16 +46,10 @@ public class UserProfileResource {
 		userDAO = jdbi.onDemand(UserDAO.class);
 	}
 
-	// @GET
-	// public Response getReservations(@Auth User user) {
-	//
-	// return Response.ok(user).build();
-	//
-	// }
-
+	
 	@GET
 	@Path("/All") // retrieve all users paginated
-	public Response getReservations(@Context UriInfo ui) {
+	public Response getUsers(@Context UriInfo ui) {
 		// retrieve All the users
 		MultivaluedMap<String, String> queryParams = ui.getQueryParameters();
 
@@ -96,6 +90,8 @@ public class UserProfileResource {
 
 		return Response.ok(Users.get()).build();
 	}
+	
+	
 
 	@DELETE
 	@Path("/delete/{id}")

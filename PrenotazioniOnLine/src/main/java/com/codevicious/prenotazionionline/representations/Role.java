@@ -2,18 +2,18 @@ package com.codevicious.prenotazionionline.representations;
 
 public class Role {
 	
-	long id;
+	int id;
 	String role;
 	String description;
 	String sigla;
 	
-	public Role(long id, String role, String description, String sigla) {
+	public Role(int id, String role, String description, String sigla) {
 		this.id = id;
 		this.role = role;
 		this.description = description;
 		this.sigla = sigla;
 	}
-	public long getId() {
+	public int getId() {
 		return id;
 	}
 	public String getRole() {
@@ -25,7 +25,7 @@ public class Role {
 	public String getSigla() {
 		return sigla;
 	}
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 	public void setRole(String role) {
