@@ -10,6 +10,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 import org.skife.jdbi.v2.DBI;
@@ -41,13 +43,13 @@ public class SectorsResource {
 	@GET
 	@Path("/All") // retrieve all sectors in JSON Tree Format
 	public Response getSectors(@Context UriInfo ui) {
-		// retrieve All the users
-		MultivaluedMap<String, String> queryParams = ui.getQueryParameters();
 
 		Optional<List<Sector>> Sectors= Optional
 				.ofNullable(userDAO.getSectors());
 
-		return Response.ok(Sectors.get()).build();
+		if(Sectors.isPresent())
+			return Response.ok(Sectors.get()).build();
+		return Response.status(Status.NOT_FOUND).build();
 	}
 	
 

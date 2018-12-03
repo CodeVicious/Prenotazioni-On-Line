@@ -12,7 +12,7 @@ public class SectorMapper implements ResultSetMapper<Sector> {
 
 	public Sector map(int index, ResultSet r, StatementContext ctx) throws SQLException {
 
-		return new Sector(r.getInt("id"), r.getString("code"),r.getString("sector"), r.getString("description"),r.getInt("parentid"));
+		return new Sector(r.getInt("id"), r.getInt("parentid"), r.getString("code"),r.getString("sector"), r.getString("description"));
 
 	}
 
