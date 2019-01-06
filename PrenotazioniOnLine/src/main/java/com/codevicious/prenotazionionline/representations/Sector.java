@@ -2,20 +2,28 @@ package com.codevicious.prenotazionionline.representations;
 
 public class Sector {
 	
-	long id;
+	int id;
+	int parentid;
 	String code;
 	String sector;
 	String description;
 	
-	public Sector(long id, String code, String sector, String description) {
+	
+	public Sector(int id, int parentid, String code, String sector, String description) {
 		this.id = id;
+		this.parentid = parentid;
 		this.sector = sector;
 		this.code = code;
 		this.description = description;
+
 	}
 
-	public long getId() {
+	public int getId() {
 		return id;
+	}
+	
+	public int getParentid() {
+		return parentid;
 	}
 
 	public String getSector() {
@@ -26,7 +34,7 @@ public class Sector {
 		return description;
 	}
 
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
@@ -44,6 +52,11 @@ public class Sector {
 
 	public void setCode(String code) {
 		this.code = code;
+	}
+
+
+	public void setParentid(int parentid) {
+		this.parentid = parentid;
 	}
 
 }

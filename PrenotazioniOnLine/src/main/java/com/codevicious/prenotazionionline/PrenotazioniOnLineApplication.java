@@ -23,6 +23,8 @@ import com.codevicious.prenotazionionline.resources.AuthResource;
 import com.codevicious.prenotazionionline.resources.AvailabilityResource;
 import com.codevicious.prenotazionionline.resources.Dashboard;
 import com.codevicious.prenotazionionline.resources.ReservationResource;
+import com.codevicious.prenotazionionline.resources.RolesResource;
+import com.codevicious.prenotazionionline.resources.SectorsResource;
 import com.codevicious.prenotazionionline.resources.UserProfileResource;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 
@@ -109,6 +111,10 @@ public class PrenotazioniOnLineApplication extends Application<PrenotazioniOnLin
 		environment.jersey().register(new ReservationResource(jdbi, configuration));
 		environment.jersey().register(new AuthResource(jdbi));
 		environment.jersey().register(new UserProfileResource(jdbi, configuration));
+		environment.jersey().register(new SectorsResource(jdbi, configuration));
+		environment.jersey().register(new RolesResource(jdbi, configuration));
+		
+		
 		environment.jersey().register(new JsonProcessingExceptionMapper(true));
 		 environment.jersey().register(new UnrecognizedPropertyExceptionMapper());
 

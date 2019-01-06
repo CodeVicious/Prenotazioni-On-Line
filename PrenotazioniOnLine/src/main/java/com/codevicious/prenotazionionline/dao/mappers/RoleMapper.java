@@ -12,7 +12,7 @@ public class RoleMapper implements ResultSetMapper<Role> {
 
 	public Role map(int index, ResultSet r, StatementContext ctx) throws SQLException {
 
-		return new Role(r.getLong("ID"), r.getString("role"), r.getString("description"), r.getString("sigla"));
+		return new Role(r.getInt("id"), r.getString("role"), r.getString("description"), r.getString("sigla"));
 
 	}
 

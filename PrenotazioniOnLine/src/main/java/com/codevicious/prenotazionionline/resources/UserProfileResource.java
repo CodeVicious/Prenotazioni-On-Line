@@ -48,6 +48,7 @@ public class UserProfileResource {
 	}
 
 
+
 	@GET
 	@Path("/{id}") // retrieve user id
 	public Response getUser(@PathParam("id") int id) {
@@ -59,6 +60,7 @@ public class UserProfileResource {
 		return Response.status(Status.NOT_FOUND).build();
 	}
 	
+
 
 	@GET
 	@Path("/All") // retrieve all users paginated
@@ -103,6 +105,8 @@ public class UserProfileResource {
 
 		return Response.ok(Users.get()).build();
 	}
+	
+	
 
 	@DELETE
 	@Path("/delete/{id}")
