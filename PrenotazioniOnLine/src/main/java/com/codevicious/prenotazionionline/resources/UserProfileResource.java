@@ -15,6 +15,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -46,16 +47,22 @@ public class UserProfileResource {
 		userDAO = jdbi.onDemand(UserDAO.class);
 	}
 
-	// @GET
-	// public Response getReservations(@Auth User user) {
-	//
-	// return Response.ok(user).build();
-	//
-	// }
+
+	@GET
+	@Path("/{id}") // retrieve user id
+	public Response getUser(@PathParam("id") int id) {
+		
+		Optional<User> user = Optional
+				.ofNullable(userDAO.getUserByID(id));
+		if(user.isPresent())
+			return Response.ok(user.get()).build();
+		return Response.status(Status.NOT_FOUND).build();
+	}
+	
 
 	@GET
 	@Path("/All") // retrieve all users paginated
-	public Response getReservations(@Context UriInfo ui) {
+	public Response getUsers(@Context UriInfo ui) {
 		// retrieve All the users
 		MultivaluedMap<String, String> queryParams = ui.getQueryParameters();
 
@@ -99,7 +106,7 @@ public class UserProfileResource {
 
 	@DELETE
 	@Path("/delete/{id}")
-	public Response deleteAvailability(@PathParam("id") int id) {
+	public Response deleteAvailability(@PathParam("id") long id) {
 		// delete the user with the provided id
 		// ...
 		userDAO.deleteUser(id);
