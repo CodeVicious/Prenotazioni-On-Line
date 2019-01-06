@@ -1,15 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.7.4
+-- version 4.7.2
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Creato il: Giu 08, 2018 alle 14:07
--- Versione del server: 10.1.28-MariaDB
--- Versione PHP: 7.1.11
+-- Host: localhost:3306
+-- Creato il: Gen 06, 2019 alle 21:39
+-- Versione del server: 5.6.35
+-- Versione PHP: 7.1.6
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
-START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -9018,6 +9016,32 @@ INSERT INTO `availability` (`ID`, `Data`, `FKplaces`, `reserved`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Struttura della tabella `categoria_giuridica`
+--
+
+CREATE TABLE `categoria_giuridica` (
+  `id` int(11) NOT NULL,
+  `categoira` varchar(5) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf16;
+
+--
+-- Dump dei dati per la tabella `categoria_giuridica`
+--
+
+INSERT INTO `categoria_giuridica` (`id`, `categoira`) VALUES
+(1, 'A'),
+(2, 'B'),
+(3, 'B3'),
+(4, 'C'),
+(5, 'D'),
+(6, 'D3'),
+(7, 'SEG'),
+(8, 'DIR'),
+(9, 'TIR');
+
+-- --------------------------------------------------------
+
+--
 -- Struttura della tabella `clients`
 --
 
@@ -9078,6 +9102,60 @@ INSERT INTO `places` (`ID`, `name`, `address`, `lat`, `lon`, `type`, `color`) VA
 (1, 'San Miniato Basso', 'Via dei Beccai, 54, 56028 San Miniato Basso PI', 43.6949, 10.8487, 'Anagrafe', '#FF9900'),
 (2, 'Ponte a Egola', 'Via Ferrari, 5, 56024 Ponte a Egola', 43.6949, 10.8487, 'Anagrafe', '#EBF8A4'),
 (3, 'San Miniato', 'Via vittime del Duomo, 8, 56028, San Miniato', 43.6949, 10.8487, 'Anagrafe', '#D3DCE3');
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `profilo_professionale`
+--
+
+CREATE TABLE `profilo_professionale` (
+  `id` int(11) NOT NULL,
+  `profilo` varchar(100) NOT NULL,
+  `PO` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf16;
+
+--
+-- Dump dei dati per la tabella `profilo_professionale`
+--
+
+INSERT INTO `profilo_professionale` (`id`, `profilo`, `PO`) VALUES
+(1, 'addetto stampa art. 90', 0),
+(2, 'agente di pm', 0),
+(3, 'assistente sociale', 0),
+(4, 'autista scuolabus', 0),
+(5, 'avvocato', 0),
+(6, 'collaboratore amm.vo', 0),
+(7, 'collaboratore di cucina', 0),
+(8, 'collaboratore servizi generali', 0),
+(9, 'collaboratore tecnico manutentore', 0),
+(10, 'coordinatore manutenzioni', 0),
+(11, 'dirigente', 0),
+(12, 'educatore d\'infanzia', 0),
+(13, 'educatore d\'infanzia PT', 0),
+(14, 'educatore specialista d\'infanzia', 0),
+(15, 'funzionario amm.vo', 0),
+(16, 'istruttore amministrativo', 0),
+(17, 'istruttore informatico', 0),
+(18, 'istruttore tecnico', 0),
+(19, 'messo', 0),
+(20, 'operatore amm.vo', 0),
+(21, 'operatore amministrativo    ', 0),
+(22, 'operatore amministrativo pt', 0),
+(23, 'operatore della comunicazione', 0),
+(24, 'operatore di cucina', 0),
+(25, 'operatore di cucina pt', 0),
+(26, 'operatore servizi generali ', 0),
+(27, 'operatore servizi generali pt', 0),
+(28, 'operatore tecnico manutentore', 0),
+(29, 'responsabile mense', 0),
+(30, 'segretario', 0),
+(31, 'specialista amministrativo', 0),
+(32, 'specialista di vigilanza', 0),
+(33, 'specialista geologo', 0),
+(34, 'specialista informatico', 0),
+(35, 'specialista ingegnere', 0),
+(36, 'specialista tecnico', 0);
 
 -- --------------------------------------------------------
 
@@ -9187,7 +9265,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`ID`, `name`, `surname`, `username`, `email`, `password`, `telephone`, `mobile`) VALUES
-(1, 'Gianni', 'Codevico', 'webmaster', 'gcodevico@comune.san-miniato.pi.it', 'codevico', '', '');
+(1, 'Gianni', 'Codevico', 'webmaster', 'gcodevico@comune.san-miniato.pi.it', 'codevico', '', ''),
+(2, 'Adriana', 'Viale', 'aviale', 'aviale@comune.san-miniato.pi.it', 'bfbe46a9b834db567c7744190397ff38', '', '3333333'),
+(3, 'Francesca', 'Bruni', 'fbruni', 'fbruni@comune.san-miniato.pi.it', 'codevico', '', '');
 
 -- --------------------------------------------------------
 
@@ -9243,6 +9323,12 @@ ALTER TABLE `availability`
   ADD PRIMARY KEY (`ID`);
 
 --
+-- Indici per le tabelle `categoria_giuridica`
+--
+ALTER TABLE `categoria_giuridica`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indici per le tabelle `clients`
 --
 ALTER TABLE `clients`
@@ -9259,6 +9345,12 @@ ALTER TABLE `hierarchical_sectors`
 --
 ALTER TABLE `places`
   ADD PRIMARY KEY (`ID`) USING BTREE;
+
+--
+-- Indici per le tabelle `profilo_professionale`
+--
+ALTER TABLE `profilo_professionale`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indici per le tabelle `reservations`
@@ -9311,62 +9403,61 @@ ALTER TABLE `users_sectors_rel`
 --
 ALTER TABLE `auth_tokens`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
-
 --
 -- AUTO_INCREMENT per la tabella `availability`
 --
 ALTER TABLE `availability`
   MODIFY `ID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8745;
-
+--
+-- AUTO_INCREMENT per la tabella `categoria_giuridica`
+--
+ALTER TABLE `categoria_giuridica`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 --
 -- AUTO_INCREMENT per la tabella `clients`
 --
 ALTER TABLE `clients`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
-
 --
 -- AUTO_INCREMENT per la tabella `hierarchical_sectors`
 --
 ALTER TABLE `hierarchical_sectors`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
 --
 -- AUTO_INCREMENT per la tabella `places`
 --
 ALTER TABLE `places`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
+--
+-- AUTO_INCREMENT per la tabella `profilo_professionale`
+--
+ALTER TABLE `profilo_professionale`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 --
 -- AUTO_INCREMENT per la tabella `reservations`
 --
 ALTER TABLE `reservations`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
 --
 -- AUTO_INCREMENT per la tabella `roles`
 --
 ALTER TABLE `roles`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
 --
 -- AUTO_INCREMENT per la tabella `sectors`
 --
 ALTER TABLE `sectors`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
-
 --
 -- AUTO_INCREMENT per la tabella `tree_map`
 --
 ALTER TABLE `tree_map`
   MODIFY `node_id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
 --
 -- AUTO_INCREMENT per la tabella `users`
 --
 ALTER TABLE `users`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-COMMIT;
-
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
