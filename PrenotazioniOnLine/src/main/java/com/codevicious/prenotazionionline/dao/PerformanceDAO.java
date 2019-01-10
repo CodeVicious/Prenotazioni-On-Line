@@ -10,6 +10,7 @@ import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 import org.skife.jdbi.v2.sqlobject.customizers.Define;
 import org.skife.jdbi.v2.sqlobject.customizers.Mapper;
+import org.skife.jdbi.v2.sqlobject.stringtemplate.UseStringTemplate3StatementLocator;
 
 import com.codevicious.prenotazionionline.dao.mappers.PerformanceMapper;
 import com.codevicious.prenotazionionline.dao.mappers.PlacesMapper;
@@ -22,7 +23,7 @@ import com.codevicious.prenotazionionline.representations.Places;
 import com.codevicious.prenotazionionline.representations.Role;
 import com.codevicious.prenotazionionline.representations.Sector;
 import com.codevicious.prenotazionionline.representations.User;
-
+@UseStringTemplate3StatementLocator
 public interface PerformanceDAO {
 	
 	@Mapper(PerformanceMapper.class)
@@ -30,8 +31,12 @@ public interface PerformanceDAO {
 	PerformanceUser getPerfUserByID(@Bind("perf_user_id") long perf_user_id);
 
 	@Mapper(PerformanceMapper.class)
-	@SqlQuery("SELECT * FROM profili_performance ORDER BY <columnName> <direction> LIMIT :recordSize OFFSET :initial")
-	List<PerformanceUser> getUsers(@Define("columnName") String columnName, @Define("direction") String direction,
+	@SqlQuery("SELECT id, Anno, inizio_incarico, fine_incarico, giorni_lavorati, CP, Responsabilita_speciali, "
+			+ "cognome, nome, DO, Note_Informative_1, Note_Informative_2, percentuale_comando_effettivo, percentuale_do, "
+			+ "presenza_giuridica, capitolo_standard, capitolo_oneri_standard, capitolo_irap_standard, "
+			+ "fk_sectors, fk_profilo_professionale, fk_categoria_giuridica, "
+			+ "fk_user FROM profili_performance ORDER BY <columnName> <direction> LIMIT :recordSize OFFSET :initial")
+	List<PerformanceUser> getPerfUsers(@Define("columnName") String columnName, @Define("direction") String direction,
 			@Bind("initial") long initial, @Bind("recordSize") long recordSize);
 
 

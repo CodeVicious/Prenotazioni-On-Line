@@ -19,6 +19,7 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
 
 import org.skife.jdbi.v2.DBI;
+import org.skife.jdbi.v2.sqlobject.stringtemplate.UseStringTemplate3StatementLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,7 +58,7 @@ public class PerformanceUserResource {
 
 		String pageNo = "0";
 		String pageSize = "10";
-		String column = "surname";
+		String column = "cognome";
 		String sortDirection = "asc";
 
 		if (!queryParams.isEmpty()) {
@@ -88,7 +89,7 @@ public class PerformanceUserResource {
 		}
 
 		Optional<List<PerformanceUser>> Users = Optional
-				.ofNullable(performanceDAO.getUsers(column, sortDirection, start, listDisplayAmount));
+				.ofNullable(performanceDAO.getPerfUsers(column, sortDirection, start, listDisplayAmount));
 
 		return Response.ok(Users.get()).build();
 	}
