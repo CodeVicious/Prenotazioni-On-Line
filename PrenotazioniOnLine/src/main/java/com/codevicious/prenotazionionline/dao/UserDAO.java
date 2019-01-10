@@ -53,7 +53,7 @@ public interface UserDAO {
 	long insertUser(@BindBean User user);
 
 	@Mapper(RoleMapper.class)
-	@SqlQuery("SELECT * FROM roles ORDER BY role")	
+	@SqlQuery("SELECT * FROM roles ORDER BY role")
 	List<Role> getRoles();
 
 	@Mapper(SectorMapper.class)

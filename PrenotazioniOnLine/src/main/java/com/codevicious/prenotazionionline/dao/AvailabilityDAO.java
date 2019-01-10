@@ -9,19 +9,19 @@ import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 import org.skife.jdbi.v2.sqlobject.customizers.Mapper;
 
-import com.codevicious.prenotazionionline.dao.mappers.AvailabilityMapper;
+import com.codevicious.prenotazionionline.dao.mappers.PerformanceMapper;
 import com.codevicious.prenotazionionline.dao.mappers.PlacesMapper;
 import com.codevicious.prenotazionionline.representations.Availability;
 import com.codevicious.prenotazionionline.representations.Places;
 
 public interface AvailabilityDAO {
 	
-	@Mapper(AvailabilityMapper.class)
+	@Mapper(PerformanceMapper.class)
 	@SqlQuery("SELECT availability.*, places.name as name, places.color as color FROM availability INNER JOIN places on places.ID = availability.FKplaces"
 			+ " where availability.ID = :id")
 	Availability getAvailabilityById(@Bind("id") long fkavailability);
 
-	@Mapper(AvailabilityMapper.class)
+	@Mapper(PerformanceMapper.class)
 	@SqlQuery("SELECT availability.*, places.name as name, places.color as color FROM availability INNER JOIN places on places.ID = availability.FKplaces"
 			+ " where 1")
 	List<Availability> getAllAvailability();
@@ -31,7 +31,7 @@ public interface AvailabilityDAO {
 			+ "FROM places INNER JOIN availability on places.ID = availability.FKplaces ORDER BY name")
 	List<Places> getPlaces();
 
-	@Mapper(AvailabilityMapper.class)
+	@Mapper(PerformanceMapper.class)
 	@SqlQuery("SELECT availability.*, places.name as name, places.color as color FROM availability INNER JOIN places on places.ID = availability.FKplaces "
 			+ "WHERE (availability.Data > :start AND availability.Data < :end AND availability.FKplaces = :id)"
 			+ "			ORDER BY availability.Data")

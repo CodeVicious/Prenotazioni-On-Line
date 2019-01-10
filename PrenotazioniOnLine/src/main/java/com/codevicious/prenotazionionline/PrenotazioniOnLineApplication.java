@@ -22,6 +22,7 @@ import com.codevicious.prenotazionionline.resources.AdminDashboard;
 import com.codevicious.prenotazionionline.resources.AuthResource;
 import com.codevicious.prenotazionionline.resources.AvailabilityResource;
 import com.codevicious.prenotazionionline.resources.Dashboard;
+import com.codevicious.prenotazionionline.resources.PerformanceUserResource;
 import com.codevicious.prenotazionionline.resources.ReservationResource;
 import com.codevicious.prenotazionionline.resources.RolesResource;
 import com.codevicious.prenotazionionline.resources.SectorsResource;
@@ -113,6 +114,7 @@ public class PrenotazioniOnLineApplication extends Application<PrenotazioniOnLin
 		environment.jersey().register(new UserProfileResource(jdbi, configuration));
 		environment.jersey().register(new SectorsResource(jdbi, configuration));
 		environment.jersey().register(new RolesResource(jdbi, configuration));
+		environment.jersey().register(new PerformanceUserResource(jdbi,configuration));
 		
 		
 		environment.jersey().register(new JsonProcessingExceptionMapper(true));

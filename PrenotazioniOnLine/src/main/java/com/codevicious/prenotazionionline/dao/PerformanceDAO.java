@@ -4,53 +4,60 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 import org.skife.jdbi.v2.sqlobject.Bind;
+import org.skife.jdbi.v2.sqlobject.BindBean;
 import org.skife.jdbi.v2.sqlobject.GetGeneratedKeys;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
+import org.skife.jdbi.v2.sqlobject.customizers.Define;
 import org.skife.jdbi.v2.sqlobject.customizers.Mapper;
 
-import com.codevicious.prenotazionionline.dao.mappers.AvailabilityMapper;
+import com.codevicious.prenotazionionline.dao.mappers.PerformanceMapper;
 import com.codevicious.prenotazionionline.dao.mappers.PlacesMapper;
+import com.codevicious.prenotazionionline.dao.mappers.RoleMapper;
+import com.codevicious.prenotazionionline.dao.mappers.SectorMapper;
+
 import com.codevicious.prenotazionionline.representations.Availability;
+import com.codevicious.prenotazionionline.representations.PerformanceUser;
 import com.codevicious.prenotazionionline.representations.Places;
+import com.codevicious.prenotazionionline.representations.Role;
+import com.codevicious.prenotazionionline.representations.Sector;
+import com.codevicious.prenotazionionline.representations.User;
 
 public interface PerformanceDAO {
 	
-	@Mapper(AvailabilityMapper.class)
-	@SqlQuery("SELECT availability.*, places.name as name, places.color as color FROM availability INNER JOIN places on places.ID = availability.FKplaces"
-			+ " where availability.ID = :id")
-	Availability getAvailabilityById(@Bind("id") long fkavailability);
+	@Mapper(PerformanceMapper.class)
+	@SqlQuery("select * from profili_performance where id = :perf_user_id")
+	PerformanceUser getPerfUserByID(@Bind("perf_user_id") long perf_user_id);
 
-	@Mapper(AvailabilityMapper.class)
-	@SqlQuery("SELECT availability.*, places.name as name, places.color as color FROM availability INNER JOIN places on places.ID = availability.FKplaces"
-			+ " where 1")
-	List<Availability> getAllAvailability();
+	@Mapper(PerformanceMapper.class)
+	@SqlQuery("SELECT * FROM profili_performance ORDER BY <columnName> <direction> LIMIT :recordSize OFFSET :initial")
+	List<PerformanceUser> getUsers(@Define("columnName") String columnName, @Define("direction") String direction,
+			@Bind("initial") long initial, @Bind("recordSize") long recordSize);
 
-	@Mapper(PlacesMapper.class)
-	@SqlQuery("SELECT DISTINCT places.ID, places.name, places.address, places.lat, places.lon, places.type, places.color  "
-			+ "FROM places INNER JOIN availability on places.ID = availability.FKplaces ORDER BY name")
-	List<Places> getPlaces();
 
-	@Mapper(AvailabilityMapper.class)
-	@SqlQuery("SELECT availability.*, places.name as name, places.color as color FROM availability INNER JOIN places on places.ID = availability.FKplaces "
-			+ "WHERE (availability.Data > :start AND availability.Data < :end AND availability.FKplaces = :id)"
-			+ "			ORDER BY availability.Data")
-	List<Availability> getAvailabilityByMonthYearPlace(@Bind("start") String start, @Bind("end") String end,
-			@Bind("id") String id);
+	@SqlUpdate("DELETE from profili_performance where id = :perf_user_id")
+	long deletePerfUser(@Bind("perf_user_id") long perf_user_id);
 
-	@GetGeneratedKeys
-	@SqlUpdate("INSERT INTO availability (ID, Data, FK_places) VALUES (NULL,:Data, :FKplaces)")
-	int createAvailability(@Bind("Data") DateTime Data,  @Bind("FK_places") long FK_places);
+	@SqlUpdate("UPDATE profili_performance SET"			
+			+ " Anno=:Anno,inizio_incarico=:inizio_incarico,fine_incarico=:fine_incarico,giorni_lavorati=:giorni_lavorati,"
+			+ "CP=:CP,Responsabilita_speciali=:Responsabilita_speciali,nome=:nome,cognome=:cognome,DO=:DO,Note_Informative_1=:Note_Informative_1,"
+			+ "Note_Informative_2=:Note_Informative_2,percentuale_comando_effettivo=:percentuale_comando_effettivo,percentuale_do=:percentuale_do,"
+			+ "presenza_giuridica=:presenza_giuridica,capitolo_standard=:capitolo_standard,capitolo_oneri_standard=:capitolo_oneri_standard,"
+			+ "capitolo_irap_standard=:capitolo_irap_standard,"
+			+ "fk_sectors=:fk_sectors,fk_profilo_professionale=:fk_profilo_professionale,"
+			+ "fk_categoria_giuridica=:fk_categoria_giuridica,fk_user=:fk_user"
+			+ "where id = :id")	
+	long updatePerfUser(@BindBean PerformanceUser perfuser);
 
-	@SqlUpdate("UPDATE availability SET Data=:Data, FKplaces=:FKplaces WHERE ID = :id")
-	void updateAvailability(@Bind("id") int id, @Bind("Data") DateTime Data,
-			@Bind("FKplaces") int FKplaces);
-	
-	@SqlUpdate("UPDATE availability SET reserved = :value  WHERE ID = :id")
-	void updateAvailabilityReserved(@Bind("id") long id, @Bind("value") Boolean value);
-
-	@SqlUpdate("DELETE FROM availability WHERE ID = :id")
-	void deleteAvailability(@Bind("id") int id);
-
+	@SqlUpdate("INSERT INTO " + 
+			"profili_performance(id, Anno, inizio_incarico, fine_incarico, giorni_lavorati, CP, Responsabilita_speciali, "
+			+ "nome, cognome, DO, Note_Informative_1, Note_Informative_2, percentuale_comando_effettivo, percentuale_do, "
+			+ "presenza_giuridica, capitolo_standard, capitolo_oneri_standard, capitolo_irap_standard, fk_sectors, "
+			+ "fk_profilo_professionale, fk_categoria_giuridica, fk_user) " + 
+			"VALUES (:Anno, :inizio_incarico, :fine_incarico, :giorni_lavorati, :CP, :Responsabilita_speciali, "
+			+ ":nome, :cognome, :DO, :Note_Informative_1, :Note_Informative_2, :percentuale_comando_effettivo, "
+			+ ":percentuale_do, :presenza_giuridica, :capitolo_standard, :capitolo_oneri_standard, "
+			+ ":capitolo_irap_standard, :fk_sectors, :fk_profilo_professionale, :fk_categoria_giuridica, :fk_user)")
+	long insertUser(@BindBean PerformanceUser perfuser);
 	
 }
