@@ -13,14 +13,13 @@ public class PerformanceMapper implements ResultSetMapper<PerformanceUser> {
 
 	public PerformanceUser map(int index, ResultSet r, StatementContext ctx) throws SQLException {
 
-		return new PerformanceUser(
-				r.getLong("id"), r.getInt("Anno"), 
+		return new PerformanceUser(r.getLong("id"), r.getInt("Anno"),
 				PrenotazioniOnlineStatics.shortDateFormatyyyyMMdd.parseDateTime(r.getString("inizio_incarico")),
-				PrenotazioniOnlineStatics.shortDateFormatyyyyMMdd.parseDateTime(r.getString("fine_incarico")), r.getInt("giorni_lavorati"), r.getBoolean("CP"),
-				r.getString("responsabilita_speciali"), r.getString("nome"), r.getString("cognome"), r.getString("DO"),
-				r.getString("note_Informative_1"), r.getString("note_Informative_2"),
-				r.getDouble("percentuale_comando_effettivo"), r.getDouble("percentuale_do"),
-				r.getDouble("presenza_giuridica"), r.getString("capitolo_standard"),
+				PrenotazioniOnlineStatics.shortDateFormatyyyyMMdd.parseDateTime(r.getString("fine_incarico")),
+				r.getInt("giorni_lavorati"), r.getBoolean("CP"), r.getString("responsabilita_speciali"),
+				r.getString("nome"), r.getString("cognome"), r.getString("DO"), r.getString("note_Informative_1"),
+				r.getString("note_Informative_2"), r.getDouble("percentuale_comando_effettivo"),
+				r.getDouble("percentuale_do"), r.getDouble("presenza_giuridica"), r.getString("capitolo_standard"),
 				r.getString("capitolo_oneri_standard"), r.getString("capitolo_irap_standard"), r.getLong("fk_sectors"),
 				r.getLong("fk_profilo_professionale"), r.getLong("fk_categoria_giuridica"), r.getLong("fk_user"));
 

@@ -27,6 +27,7 @@ import com.codevicious.prenotazionionline.PrenotazioniOnLineConfiguration;
 import com.codevicious.prenotazionionline.dao.PerformanceDAO;
 import com.codevicious.prenotazionionline.helper.PrenotazioniOnlineStatics;
 import com.codevicious.prenotazionionline.representations.PerformanceUser;
+import com.codevicious.prenotazionionline.representations.SchedaPerformance;
 
 @Path("/performance")
 @Produces(MediaType.APPLICATION_JSON)
@@ -48,6 +49,17 @@ public class PerformanceUserResource {
 		if (user.isPresent())
 			return Response.ok(user.get()).build();
 		return Response.status(Status.NOT_FOUND).build();
+	}
+	
+	@GET
+	@Path("/{id}/scheda") // retrieve user id
+	public Response getUserScheda(@PathParam("id") int id) {
+
+		Optional<SchedaPerformance> schedaUser = Optional.ofNullable(performanceDAO.getSchedaPerfUserByID(id));
+		
+		if (schedaUser.isPresent())
+			return Response.ok(schedaUser.get()).build();
+		return Response.status(Response.Status.NO_CONTENT).build();
 	}
 
 	@GET
