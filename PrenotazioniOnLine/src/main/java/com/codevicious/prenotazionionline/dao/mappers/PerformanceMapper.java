@@ -21,7 +21,7 @@ public class PerformanceMapper implements ResultSetMapper<PerformanceUser> {
 				r.getString("note_Informative_2"), r.getDouble("percentuale_comando_effettivo"),
 				r.getDouble("percentuale_do"), r.getDouble("presenza_giuridica"), r.getString("capitolo_standard"),
 				r.getString("capitolo_oneri_standard"), r.getString("capitolo_irap_standard"), r.getLong("fk_sectors"),
-				r.getLong("fk_profilo_professionale"), r.getLong("fk_categoria_giuridica"), r.getLong("fk_user"));
+				r.getLong("fk_profilo_professionale"), r.getLong("fk_categoria_giuridica"), r.getLong("fk_user"), r.getLong("fk_scheda"));
 
 	}
 

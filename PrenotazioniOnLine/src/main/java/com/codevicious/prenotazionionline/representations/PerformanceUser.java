@@ -29,13 +29,14 @@ public class PerformanceUser {
 	long fk_profilo_professionale;
 	long fk_categoria_giuridica;
 	long fk_user;
+	long fk_scheda;
 	
 	public PerformanceUser(long id, int anno, DateTime inizio_incarico, DateTime fine_incarico, int giorni_lavorati,
 			boolean cP, String responsabilita_speciali, String nome, String cognome, String dO,
 			String note_Informative_1, String note_Informative_2, double percentuale_comando_effettivo,
 			double percentuale_do, double presenza_giuridica, String capitolo_standard, String capitolo_oneri_standard,
 			String capitolo_irap_standard, long fk_sectors, long fk_profilo_professionale, long fk_categoria_giuridica,
-			long fk_user) {
+			long fk_user, long fk_scheda) {
 		
 		this.id = id;
 		Anno = anno;
@@ -59,6 +60,7 @@ public class PerformanceUser {
 		this.fk_profilo_professionale = fk_profilo_professionale;
 		this.fk_categoria_giuridica = fk_categoria_giuridica;
 		this.fk_user = fk_user;
+		this.fk_scheda = fk_scheda;
 	}
 
 	public long getId() {
@@ -235,6 +237,14 @@ public class PerformanceUser {
 
 	public void setFk_user(long fk_user) {
 		this.fk_user = fk_user;
+	}
+
+	public long getFk_scheda() {
+		return fk_scheda;
+	}
+
+	public void setFk_scheda(long fk_scheda) {
+		this.fk_scheda = fk_scheda;
 	}
 	
 	
